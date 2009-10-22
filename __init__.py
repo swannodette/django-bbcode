@@ -524,10 +524,12 @@ class Library(object):
         # Return the head node
         return headnode
     
-    def validate(self, content, namespaces=['all']):
+    def validate(self, content, namespaces=['all'], auto_discover=False):
         """
         Validates a given content and returns the errors or an empty sequence.
         """
+        if auto_discover:
+            autodiscover()
         try:
             headnode = self.get_parse_tree(content, namespaces)
         except ParserError:
