@@ -368,7 +368,7 @@ class Library(object):
     
     def __init__(self):
         self.names = {}
-        self.tags = {'include': AutoDict(), 'exclude':AutoDict()}
+        self.tags = AutoDict()
     
     def convert(self, name):
         """
@@ -394,20 +394,12 @@ class Library(object):
         Register a BBCode Tag Node
         """
         # Add the class to their namespaces.
-        if hasattr(klass, 'Namespaces'):
-            ns = klass.Namespaces
-            if hasattr(ns, 'exclude'):
-                for exclude in ns.exclude:
-                    self.tags['exclude'][exclude].add(klass)
-            if hasattr(ns, 'include'):
-                for include in ns.include:
-                    self.tags['include'][include].add(klass)
-            if not hasattr(ns, 'not_in_all') or not ns.not_in_all:
-                self.tags['include']['all'].add(klass)
-        else:
-            self.tags['include']['all'].add(klass)
+        if hasattr(klass, 'namespaces'):
+            for ns in klass.namespaces:
+                self.tags[ns].append(klass)
+                self.tags['__all__'].add(klass)
         for default in self.get_default_namespaces(klass):
-            self.tags['include'][default].add(klass)
+            self.tags[default].add(klass)
         # Register documentation
         docstrings = klass.__doc__
         if hasattr(klass, 'tagname'):
@@ -448,10 +440,12 @@ class Library(object):
         include = []
         # Split the 'namespaces' into exclude and include namespaces
         for ns in namespaces:
-            if ns in self.tags['include']:
+            if ns.startswith('no-'):
+                _ns = ns[3:]
+                if _ns in self.tags:
+                    exclude.append(_ns)
+            elif ns in self.tags:
                 include.append(ns)
-            elif ns in self.tags['exclude']:
-                exclude.append(ns)
         # Include first
         if not include or 'all' in include:
             tags = set(self.tags['include']['all'])
@@ -461,7 +455,7 @@ class Library(object):
         # Then exclude
         for ns in exclude:
             tags = tags.difference(self.tags['exclude'][ns])
-        return tags or list(self.tags['include']['all'])
+        return tags
     
     def get_taglist(self, content, namespaces=['all']):
         """

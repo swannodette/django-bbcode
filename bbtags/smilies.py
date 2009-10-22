@@ -6,9 +6,6 @@ class Smilies(SelfClosingTagNode):
     def parse(self):
         name = self.match.groupdict()['name']
         return '<img src="/media/smilies/%s.gif" alt="%s" />' % (name, name)
-    
-    class Namespaces:
-        exclude = ('nosmilies',)
         
 
 class AlternativeSmilie(SelfClosingTagNode):
@@ -20,9 +17,6 @@ class AlternativeSmilie(SelfClosingTagNode):
     def parse(self):
         alias = self.match.group()
         return '<img src="/media/smilies/%s.gif" alt="%s" />' % (self.alias, alias)
-    
-    class Namespaces:
-        exclude = ('nosmilies',)
     
     
 class LOL(AlternativeSmilie):
