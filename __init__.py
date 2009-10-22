@@ -396,8 +396,10 @@ class Library(object):
         # Add the class to their namespaces.
         if hasattr(klass, 'namespaces'):
             for ns in klass.namespaces:
-                self.tags[ns].append(klass)
+                self.tags[ns].add(klass)
                 self.tags['__all__'].add(klass)
+        else:
+            self.tags['__all__'].add(klass)
         for default in self.get_default_namespaces(klass):
             self.tags[default].add(klass)
         # Register documentation
