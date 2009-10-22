@@ -447,17 +447,17 @@ class Library(object):
             elif ns in self.tags:
                 include.append(ns)
         # Include first
-        if not include or 'all' in include:
-            tags = set(self.tags['include']['all'])
+        if not include or '__all__' in include:
+            tags = set(self.tags['__all__'])
         else:
             for ns in include:
-                tags = tags.union(self.tags['include'][ns])
+                tags = tags.union(self.tags[ns])
         # Then exclude
         for ns in exclude:
-            tags = tags.difference(self.tags['exclude'][ns])
+            tags = tags.difference(self.tags[ns])
         return tags
     
-    def get_taglist(self, content, namespaces=['all']):
+    def get_taglist(self, content, namespaces=['__all__']):
         """
         Get the tag-match list of a content for given namespaces
         """
@@ -478,7 +478,7 @@ class Library(object):
         # Sort by position
         return sorted(taglist)
     
-    def get_parse_tree(self, content, namespaces=['all']):
+    def get_parse_tree(self, content, namespaces=['__all__']):
         """
         Prepare content for parsing.
         Returns a HeadNode instance
@@ -551,7 +551,7 @@ def register_text_parser(parser=None, order=512):
         return parser
     return deco
     
-def parse(content, namespaces=['all'], strict=True, auto_discover=False):
+def parse(content, namespaces=['__all__'], strict=True, auto_discover=False):
     """
     Parse a content with the BBCodes
     """
