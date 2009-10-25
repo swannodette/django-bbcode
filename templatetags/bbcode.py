@@ -13,7 +13,7 @@ class PseudoVar(object):
 
 
 class BBCodeNode(template.Node):
-    def __init__(self, content, namespaces):
+    def __init__(self, content, namespaces, varname):
         self.content = template.Variable(content)
         self.namespaces = []
         for ns in namespaces:
@@ -21,6 +21,7 @@ class BBCodeNode(template.Node):
                 self.namespaces.append(PseudoVar(ns[1:-1]))
             else:
                 self.namespaces.append(template.Variable(ns))
+        self.varname = varname
 
     def render(self, context):
         try:
@@ -35,7 +36,11 @@ class BBCodeNode(template.Node):
             else:
                 namespaces.add(ns)
         parsed, errors = parse(content, namespaces, False, True)
-        return parsed
+        if self.varname:
+            context[self.varname] = parsed
+            return ''
+        else:
+            return parsed
 
 @register.tag
 def bbcode(parser, token):
@@ -65,4 +70,9 @@ def bbcode(parser, token):
         content = bits.pop(0)
     except ValueError:
         raise template.TemplateSyntaxError, "bbcode tag requires at least one argument"
-    return BBCodeNode(content, bits)
+    varname = None
+    if len(bits) > 1:
+        if bits[-2] == 'as':
+            varname = bits[-1]
+    bits = bits[:-2]
+    return BBCodeNode(content, bits, varname)
