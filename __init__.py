@@ -222,6 +222,7 @@ class TextNode(Node):
     def __init__(self, text):
         self.text = text
         self.raw_content = text
+        self.nodes = []        
         
     def append(self, text):
         raise TypeError, "TextNode does not support appending"
@@ -238,14 +239,14 @@ class TextNode(Node):
     def __repr__(self):
         return '<TextNode instance "%s">' % self.text
     
-    def __str__(self):
-        return self.text
-    
     def parse(self):
         """
         Return cgi-escaped content
         """
         return cgi.escape(self.text)
+    
+    def __str__(self):
+        return 'TextNode: %r' % self.text
         
     
 class TagNode(Node):
@@ -264,6 +265,9 @@ class TagNode(Node):
         for node in self.nodes:
             inner += node.parse()
         return inner
+    
+    def __str__(self):
+        return self.__class__.__name__
     
     
 class ReplaceTagNode(TagNode):
@@ -286,6 +290,9 @@ class ReplaceTagNode(TagNode):
     def parse(self):
         return '<%s>%s</%s>' % (self.tagname, self.parse_inner(), self.tagname)
     
+    def __str__(self):
+        return 'ReplaceTagNode: %s' % self.__class__.__name__
+    
     
 class ArgumentTagNode(TagNode):
     """
@@ -296,6 +303,9 @@ class ArgumentTagNode(TagNode):
         arg = match.group('argument')
         self.argument = arg.strip('"') if arg else ''
         TagNode.__init__(self, parent, match, content)
+        
+    def __str__(self):
+        return '%s (%s)' % (self.__class__.__name__, self.argument)
 
 
 class _MultiArgs(dict):
@@ -325,6 +335,12 @@ class MultiArgumentTagNode(TagNode):
         self.arguments = _MultiArgs(kwargs)
         TagNode.__init__(self, parent, match, content)
         
+    def __str__(self):
+        args = []
+        for key, value in self.arguments.iteritems():
+            args.append('%s: %s' % (key, value))
+        return '%s (%s)' % (self.__class__.__name__, ', '.join(args))
+        
         
 class SelfClosingTagNode(TagNode):
     """
@@ -347,6 +363,9 @@ class SelfClosingTagNode(TagNode):
         """
         return self.parent
     
+    def __str__(self):
+        return 'SelfClosingTag: %s' % self.__class__.__name__
+    
     
 class AutoDict(dict):
     def __getitem__(self, item):
@@ -368,6 +387,7 @@ class Library(object):
     
     def __init__(self):
         self.names = {}
+        self.raw_names = {}
         self.tags = AutoDict()
     
     def convert(self, name):
@@ -397,8 +417,9 @@ class Library(object):
         if hasattr(klass, 'namespaces'):
             for ns in klass.namespaces:
                 self.tags[ns].add(klass)
-                self.tags['__all__'].add(klass)
-        else:
+                if not hasattr(klass, 'not_in_all') or not klass.not_in_all:
+                    self.tags['__all__'].add(klass)
+        elif not hasattr(klass, 'not_in_all') or not klass.not_in_all:
             self.tags['__all__'].add(klass)
         for default in self.get_default_namespaces(klass):
             self.tags[default].add(klass)
@@ -414,7 +435,45 @@ class Library(object):
             else:
                 verbose_name = self.convert(klass.__name__)
             self.names[tagname] = {'docs': self.dsparse(docstrings.strip().replace('\n','<br />').replace('\\\\','\\')),
-                                   'name': verbose_name}
+                                   'name': verbose_name,
+                                   'class': klass}
+        self.raw_names[klass.__name__] = klass
+        
+    def add_namespace(self, klass, *namespaces):
+        """
+        Add a tag to a namespace or several namespaces
+        """
+        if isinstance(klass, TagNode):
+            for namespace in namespaces:
+                self.tags[namespace].add(klass)
+        elif isinstance(klass, basestring):
+            if klass in self.raw_names:
+                self.add_namespace(self.raw_names[klass], *namespaces)
+            elif klass in self.names:
+                self.add_namespace(self.names[klass]['class'], *namespaces)
+                
+    def remove_namespace(self, klass, *namespaces):
+        """
+        Remove a tag from a namespace or several namespaces
+        """
+        if isinstance(klass, TagNode):
+            for namespace in namespaces:
+                if klass in self.tags[namespace]:
+                    self.tags[namespace].remove(klass)
+        elif isinstance(klass, basestring):
+            if klass in self.raw_names:
+                self.add_namespace(self.raw_names[klass], *namespaces)
+            elif klass in remove_namespace.names:
+                self.remove_namespace(self.names[klass]['class'], *namespaces)
+                
+    def set_not_in_all(self, klass, flag=True):
+        """
+        Set 'not_in_all' for a tag.
+        """
+        if flag:
+            self.remove_namespace(klass, '__all__')
+        else:
+            self.add_namespace(klass, '__all__')
             
     def get_help(self, tagname=None):
         """
@@ -524,7 +583,25 @@ class Library(object):
         # Return the head node
         return headnode
     
-    def validate(self, content, namespaces=['all'], auto_discover=False):
+    def get_visual_parse_tree(self, content, namespaces=['__all__'], indent=4):
+        def recurse(nodes, level, indent):
+            cindent = level * indent
+            sindent = ' ' * cindent
+            next = level + 1
+            l = []
+            for node in nodes:
+                l.append('%s-%s' % (sindent, str(node)))
+                l += recurse(node.nodes, next, indent)
+            return l
+        try:
+            head = self.get_parse_tree(content, namespaces)
+        except ParseError:
+            return '-Parse Error'
+        visuals = ['-HeadNode']
+        visuals += recurse(head.nodes, 1, indent)
+        return '\n'.join(visuals)
+    
+    def validate(self, content, namespaces=['__all__'], auto_discover=False):
         """
         Validates a given content and returns the errors or an empty sequence.
         """
@@ -542,6 +619,7 @@ lib = Library()
 register = lib.register
 validate = lib.validate
 get_help = lib.get_help
+get_visual = lib.get_visual_parse_tree
 
 def register_text_parser(parser=None, order=512):
     """
