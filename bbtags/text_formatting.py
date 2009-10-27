@@ -31,6 +31,7 @@ class P(ReplaceTagNode):
     open_pattern = re.compile(patterns.no_argument % 'p')
     close_pattern = re.compile(patterns.closing % 'p')
     
+    
 class H3(ReplaceTagNode):
     """
     Creates a subtitle.
@@ -42,6 +43,34 @@ class H3(ReplaceTagNode):
     verbose_name = 'Subtitle'
     open_pattern = re.compile(patterns.no_argument % 'subtitle')
     close_pattern = re.compile(patterns.closing % 'subtitle')
+    
+    
+class Heading(ArgumentTagNode):
+    """
+    Turns a text into a heading
+    
+    Usage:
+    
+    [heading=<size>]Text[/heading]
+    
+    Arguments:
+    
+    Allowed values for <size>: big, medium, small
+    """
+    open_pattern = re.compile(patterns.single_argument % 'heading')
+    close_pattern = re.compile(patterns.closing % 'heading')
+    _aliases = {'small':'6', 'medium':'5', 'big':'4'}
+    
+    def parse(self):
+        if not self.argument:
+            self.argument = 'medium'
+        arg = self.argument.lower()
+        if not arg in self._aliases:
+            soft_raise("Size '%s' not allowed." % arg)
+            return self.parse_inner()
+        size = self._aliases[arg]
+        return '<h%s>%s</h%s>' % (size, self.parse_inner(), size)
+        
 
 
 class I(ReplaceTagNode):

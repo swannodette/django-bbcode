@@ -158,7 +158,7 @@ class Node(object):
     
     def push(self, nodeklass, match, fullcontent):
         """
-        Adds a tag node and returns that node
+        Adds a nested tag node and returns that node
         """
         node = nodeklass(self, match, fullcontent)
         self.nodes.append(node)
