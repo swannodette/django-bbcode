@@ -32,7 +32,19 @@ class P(ReplaceTagNode):
     close_pattern = re.compile(patterns.closing % 'p')
     
     
-class H3(ReplaceTagNode):
+class H1(ReplaceTagNode):
+    """
+    Creates a title.
+    
+    Usage:
+    
+    [title]Text[/title]
+    """
+    verbose_name = 'Title'
+    open_pattern = re.compile(patterns.no_argument % 'title')
+    close_pattern = re.compile(patterns.closing % 'title')
+    
+class H2(ReplaceTagNode):
     """
     Creates a subtitle.
     
@@ -59,7 +71,7 @@ class Heading(ArgumentTagNode):
     """
     open_pattern = re.compile(patterns.single_argument % 'heading')
     close_pattern = re.compile(patterns.closing % 'heading')
-    _aliases = {'small':'6', 'medium':'5', 'big':'4'}
+    _aliases = {'small':'5', 'medium':'4', 'big':'3'}
     
     def parse(self):
         if not self.argument:
@@ -426,7 +438,7 @@ class Code(ArgumentTagNode):
 
 
 register(I)
-register(H3)
+register(H2)
 register(Strong)
 register(P)
 register(U)
@@ -438,4 +450,5 @@ register(Code)
 register(Color)
 register(Size)
 register(HR)
+register(H1)
 register(Heading)
