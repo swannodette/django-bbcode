@@ -92,7 +92,7 @@ class BulletList(CreoleList):
     """
     not_in_all = True
     base_tag_name = 'ul'
-    open_pattern = re.compile(r'^[ \t]*\*(?P<content>.+)(\n|\Z)', re.MULTILINE)
+    open_pattern = re.compile(r'^[ \t]*\*(?P<content>[^*].+)(\n|\Z)', re.MULTILINE)
     
     
 class NumberedList(CreoleList):
