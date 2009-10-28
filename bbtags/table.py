@@ -310,7 +310,7 @@ class Head(ArgumentTagNode):
             if self.argument.isdigit():
                 return '<th colspan="%s">%s</th>' % (self.argument, self.parse_inner())
             else:
-                soft_fail("Head argument must be digit")
+                soft_raise("Head argument must be digit")
         return '<th>%s</th>' % self.parse_inner()
 
 

@@ -30,6 +30,12 @@ try:
     from django.utils.translation import ugettext as _
 except ImportError:
     _ = lambda x: x
+    
+try:
+    from BeautifulSoup import BeautifulSoup
+    prettify = lambda x: BeautifulSoup(x).prettify()
+except ImportError:
+    prettify = lambda x: x
 
 AUTODISCOVERED = False
 
@@ -149,6 +155,10 @@ class Node(object):
         self.parent = parent
         self.match = match
         self.nodes = []
+        
+    def soft_raise(self, errmsg):
+        soft_raise(errmsg)
+        return self.raw_content
     
     def append(self, text):
         """
@@ -182,6 +192,7 @@ class Node(object):
         """
         When closing the node just return the parent.
         """
+        self.end = end
         self.raw_content = self.fullcontent[self.start:end]
         return self.parent
     
@@ -595,7 +606,7 @@ class Library(object):
             return l
         try:
             head = self.get_parse_tree(content, namespaces)
-        except ParseError:
+        except ParserError:
             return '-Parse Error'
         visuals = ['-HeadNode']
         visuals += recurse(head.nodes, 1, indent)
@@ -653,7 +664,7 @@ def parse(content, namespaces=['__all__'], strict=True, auto_discover=False):
     content = head.parse()
     # Replace linefeeds
     content = convert_linefeeds(content)
-    return content, sem.pull()
+    return prettify(content), sem.pull()
     
 def autodiscover():
     """

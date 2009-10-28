@@ -411,14 +411,17 @@ class Code(ArgumentTagNode):
     def parse(self):
         """
         pygment highlighting
-        """
-        from pygments import highlight
-        from pygments.lexers import guess_lexer, get_lexer_by_name, TextLexer
-        from pygments.formatters import HtmlFormatter
-        from pygments.util import ClassNotFound
+        """ 
         inner = ''
         for node in self.nodes:
             inner += node.raw_content
+        try:
+            from pygments import highlight
+            from pygments.lexers import guess_lexer, get_lexer_by_name, TextLexer
+            from pygments.formatters import HtmlFormatter
+            from pygments.util import ClassNotFound
+        except ImportError:
+            return '<pre>%s</pre>' % inner
         if self.argument:
             try:
                 lexer = get_lexer_by_name(self.argument)
