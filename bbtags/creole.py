@@ -58,7 +58,6 @@ class Bold(CreoleSCTN):
     
     
 class CreoleList(CreoleSCTN):
-
     def parse(self):
         prev = self.get_prev()
         if not prev or not isinstance(prev, self.__class__):
@@ -73,8 +72,16 @@ class CreoleList(CreoleSCTN):
         else:
             # check if 'next' is actually in 'content'
             content = self.parse_inner()
-            # close the list
-            output += '<li>%s</li></%s>' % (content, self.base_tag_name)
+            output += '<li>%s</li>' % content
+            next = self.get_next()
+            if not isinstance(next, self.__class__):
+                if isinstance(next, TextNode):
+                    if next.text.strip():
+                        output += '</%s>' % self.base_tag_name
+                    else:
+                        self.kill_next()
+                else:
+                    output += '</%s>' % self.base_tag_name
         return output
     
     
@@ -144,7 +151,7 @@ class Image(SelfClosingTagNode):
     {{URL|title}}
     """
     not_in_all = True
-    open_pattern = re.compile(r'\{\{(?P<url>[^|}]+)\|?(?P<title>[^}]+)?\}\}')
+    open_pattern = re.compile(r'[^{]\{\{(?P<url>[^|}]+)\|?(?P<title>[^}]+)?\}\}[^}]')
     
     def parse(self):
         gd = self.match.groupdict()
@@ -161,7 +168,7 @@ class Code(TagNode):
      }}}
     """
     not_in_all = True
-    open_pattern = re.compile(r'^\{\{\{[ \t]*\n(#!(?P<language>\w+))?', re.MULTILINE)
+    open_pattern = re.compile(r'^\{\{\{[ \t]*\n(#!(?P<language>\w+)\n)?', re.MULTILINE)
     close_pattern = re.compile(r'^\}\}\}$', re.MULTILINE)
     
     def parse(self):
@@ -189,7 +196,7 @@ class Code(TagNode):
                 lexer = guess_lexer(inner)
             except ClassNotFound:
                 lexer = TextLexer()
-        formatter = HtmlFormatter(cssclass='code', noclasses=True, linenos='inline')
+        formatter = HtmlFormatter(cssstyles='padding: 10px 10px 10px 25px;margin: 5px;border: 1px dashed rgb(0,0,0);background: rgb(255,255,255);display: block;', noclasses=True, linenos='inline')
         hilighted = highlight(inner, lexer, formatter)
         return hilighted
     
@@ -199,12 +206,12 @@ class TT(CreoleSCTN):
     blah blah {{{ something }}} blah blah
     """
     not_in_all = True
-    open_pattern = re.compile(r'\{\{\{(?P<inner>.+)\}\}\}')
+    open_pattern = re.compile(r'\{\{\{(?P<content>.+)\}\}\}')
     
     def parse(self):
         # Get rid of the inner stuff
         self.parse_inner()
-        return '<tt>%s</tt>' % self.match.groupdict()['inner']
+        return '<tt>%s</tt>' % self.match.groupdict()['content']
     
     
 register(Italics)

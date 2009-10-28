@@ -30,12 +30,6 @@ try:
     from django.utils.translation import ugettext as _
 except ImportError:
     _ = lambda x: x
-    
-try:
-    from BeautifulSoup import BeautifulSoup
-    prettify = lambda x: BeautifulSoup(x).prettify()
-except ImportError:
-    prettify = lambda x: x
 
 AUTODISCOVERED = False
 
@@ -664,7 +658,7 @@ def parse(content, namespaces=['__all__'], strict=True, auto_discover=False):
     content = head.parse()
     # Replace linefeeds
     content = convert_linefeeds(content)
-    return prettify(content), sem.pull()
+    return content, sem.pull()
     
 def autodiscover():
     """
