@@ -221,7 +221,7 @@ class TT(CreoleSCTN):
     blah blah {{{ something }}} blah blah
     """
     not_in_all = True
-    open_pattern = re.compile(r'\{\{\{(?P<content>.+)\}\}\}')
+    open_pattern = re.compile(r'\{\{\{(?P<content>([^}]|\}[^}]}?)+)\}\}\}')
     
     def parse(self):
         # Get rid of the inner stuff
