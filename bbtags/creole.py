@@ -40,7 +40,7 @@ class Italics(CreoleSCTN):
     //text//
     """
     not_in_all = True
-    open_pattern = re.compile(r'//(?P<content>([^/][^/]?)+)//')
+    open_pattern = re.compile(r'//(?P<content>([^/]/[^/]|[^/])+)//')
     
     def parse(self):
         return '<i>%s</i>' % self.parse_inner()
@@ -51,7 +51,7 @@ class Bold(CreoleSCTN):
     **text**
     """
     not_in_all = True
-    open_pattern = re.compile(r'\*\*(?P<content>([^*][^*]?)+)\*\*')
+    open_pattern = re.compile(r'\*\*(?P<content>([^*]*[^*]|[^*])+)\*\*')
     
     def parse(self):
         return '<strong>%s</strong>' % self.parse_inner()
@@ -168,11 +168,11 @@ class Code(TagNode):
      }}}
     """
     not_in_all = True
-    open_pattern = re.compile(r'^\{\{\{[ \t]*\n(#!(?P<language>\w+)\n)?', re.MULTILINE)
+    open_pattern = re.compile(r'^\{\{\{[ \t]*\n(?P<language>#!\w+)\n?', re.MULTILINE)
     close_pattern = re.compile(r'^\}\}\}$', re.MULTILINE)
     
     def parse(self):
-        lang = self.match.groupdict().get('language', '')
+        lang = self.match.groupdict().get('language', '#!')[2:]
         inner = ''
         for node in self.nodes:
             inner += node.raw_content

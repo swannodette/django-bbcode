@@ -534,7 +534,11 @@ class Library(object):
             op = tagklass.open_pattern
             if callable(op):
                 op = op()
+            print tagklass.__name__
+            i = 1
             for match in op.finditer(content):
+                print 'found match: %s' % i
+                i += 1
                 taglist.append((match.start(), match, tagklass, True))
             cp = tagklass.close_pattern
             if callable(cp):
