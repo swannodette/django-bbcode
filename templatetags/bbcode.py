@@ -74,5 +74,5 @@ def bbcode(parser, token):
     if len(bits) > 1:
         if bits[-2] == 'as':
             varname = bits[-1]
-    bits = bits[:-2]
+        bits = bits[:-2]
     return BBCodeNode(content, bits, varname)
