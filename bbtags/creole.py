@@ -27,11 +27,26 @@ class CreoleSCTN(SelfClosingTagNode):
         del self.parent.nodes[self.index + 1]
         
     def parse_inner(self):
+        def check(next, content):
+            if isinstance(next, TextNode):
+                if next.raw_content in content:
+                    return next.raw_content
+                stripped = next.raw_content.strip()
+                if stripped in content:
+                    return stripped
+                return False
+            elif next.raw_content in content:
+                return next.raw_content
+            return False
         content = self.match.groupdict()[self.inner_name]
         next = self.get_next()
-        while next and next.raw_content in content:
-            content = content.replace(next.raw_content, next.parse())
+        while next:
+            repl = check(next, content)
+            if not repl:
+                break
+            content = content.replace(repl, next.parse())
             self.kill_next()
+            next = self.get_next()
         return content
         
 
@@ -70,7 +85,7 @@ class CreoleList(CreoleSCTN):
             # If the next item is of same kind, just add a list item here.
             output += '<li>%s</li>' % content
         else:
-            # check if 'next' is actually in 'content'
+            # get parsed inner
             content = self.parse_inner()
             output += '<li>%s</li>' % content
             next = self.get_next()
