@@ -39,6 +39,8 @@ class CreoleSCTN(SelfClosingTagNode):
                 return next.raw_content
             return False
         content = self.match.groupdict()[self.inner_name]
+        if not content:
+            return content
         next = self.get_next()
         while next:
             repl = check(next, content)
@@ -134,6 +136,7 @@ class Link(CreoleSCTN):
             name = self.parse_inner()
         except KeyError: 
             name = url
+        name = name or url
         return '<a href="%s">%s</a>' % (url, name)
     
     
