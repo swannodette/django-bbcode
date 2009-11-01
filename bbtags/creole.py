@@ -55,7 +55,7 @@ class Italics(CreoleSCTN):
     //text//
     """
     not_in_all = True
-    open_pattern = re.compile(r'//(?P<content>([^/]/[^/]|[^/])+)//')
+    open_pattern = re.compile(r'[^:]//(?P<content>([^/]/[^/]|[^/])+)[^:]//')
     
     def parse(self):
         return '<i>%s</i>' % self.parse_inner()
@@ -119,17 +119,21 @@ class NumberedList(CreoleList):
     base_tag_name = 'ol'
     open_pattern = re.compile(r'^[ \t]*#(?P<content>.+)$', re.MULTILINE)
     
-class Link(SelfClosingTagNode):
+class Link(CreoleSCTN):
     """
     [[URL|linkanme]]
     """
     not_in_all = True
-    open_pattern = re.compile(r'\[\[(?P<url>[^|\]]+)\|?(?P<name>[^\]]+)?\]\]')
+    #open_pattern = re.compile(r'\[\[(?P<content>([^\]]\][^\]]|[^\]])+)\]\]')
+    open_pattern = re.compile(r'\[\[(?P<url>[^|\]]+)\|?(?P<content>[^\]]+)?\]\]')
     
     def parse(self):
         gd = self.match.groupdict()
         url = gd['url']
-        name = gd.get('name',None) or url
+        try:
+            name = self.parse_inner()
+        except KeyError: 
+            name = url
         return '<a href="%s">%s</a>' % (url, name)
     
     
