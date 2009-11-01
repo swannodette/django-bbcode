@@ -194,7 +194,9 @@ class Code(TagNode):
     close_pattern = re.compile(r'^\}\}\}$', re.MULTILINE)
     
     def parse(self):
-        lang = self.match.groupdict().get('language', '#!')[2:-1]
+        lang = self.match.groupdict().get('language', None)
+        if lang:
+            lang = lang[2:-1]
         inner = ''
         for node in self.nodes:
             inner += node.raw_content
