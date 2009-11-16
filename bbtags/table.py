@@ -267,12 +267,12 @@ class Col(TagNode):
     open_pattern = re.compile(r'(\[col\]|\[col="?(?P<argument>[^]]+)?"?\])')
     close_pattern = re.compile(patterns.closing % 'col')
     
-    def __init__(self, parent, match, start, content):
+    def __init__(self, parent, match, content):
         try:
             self.argument = match.group('argument').strip('"')
         except:
             self.argument = None
-        TagNode.__init__(self, parent, match, start, content)
+        TagNode.__init__(self, parent, match, content)
         
     def parse(self):
         if not isinstance(self.parent, Row):
