@@ -10,7 +10,7 @@ class Table(MultiArgumentTagNode):
     
     Usage:
     
-    [table <rowsep>=\\n <colsep>=| <autohead>=1 <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none <colspanchar>=@ <simple>=0]
+    [table <rowsep>=\\n <colsep>=| <autohead>=1 <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none <colspanchar>=@ <simple>=0 <css>='']
       First column heading | Second column heading
       First row, first column | Second row, second column
       @2 Second row which spans over two columns
@@ -28,13 +28,13 @@ class Table(MultiArgumentTagNode):
     <rules>: Defines which in-table borders are rendered. Default: none
     <colspanchar>: If a cell starts with this character and is followed by a number, this number will be used as the colspan for this cell. Default: @
     <simple>: Forces a table to be parsed as simple table when all other simple table only arguments are left at default. Default: 0
-    
+    <css>: CSS class to give the table
     
     *Classic table*
     
     Usage:
     
-    [table <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none]
+    [table <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none <css>='']
       [row]
         [head]First column heading[/head]
         [head]Second column heading[/head]
@@ -70,7 +70,8 @@ class Table(MultiArgumentTagNode):
                   'cellpadding':'0',
                   'cellspacing':'0', 
                   'frame':'void',
-                  'rules':'none'}
+                  'rules':'none',
+                  'css': '',}
     
     _allowed_frame = ('void','above','below','hsides','lhs','rhs','vsides','box','border')
     _allowed_rules = ('none','groups','rows','cols','all')
@@ -122,6 +123,10 @@ class Table(MultiArgumentTagNode):
             soft_raise("Table rules '%s' is not allowed." % rules)
         else:
             rules = self._arguments['rules']
+        if self.arguments.css:
+            css = ' class="%s"' % self.arguments.css
+        else:
+            css = ''
         # Remove invalid Text nodes
         inner = ''
         for node in self.nodes:
@@ -129,7 +134,7 @@ class Table(MultiArgumentTagNode):
                 inner += node.parse()
             elif node.raw_content.strip():
                 soft_raise("Only rows are allowed directly nested inside a table")
-        return '<table border="%s" cellpadding="%s" cellspacing="%s" frame="%s" rules="%s">%s</table>' % (border, cellpadding, cellspacing, frame, rules, inner)
+        return '<table border="%s" cellpadding="%s" cellspacing="%s" frame="%s" rules="%s"%s>%s</table>' % (border, cellpadding, cellspacing, frame, rules, inner, css)
     
     def parse_simple(self):
         """
@@ -182,12 +187,16 @@ class Table(MultiArgumentTagNode):
             soft_raise("Table rules '%s' is not allowed." % rules)
         else:
             rules = self._arguments['rules']
+        if self.arguments.css:
+            css = ' class="%s"' % self.arguments.css
+        else:
+            css = ''
         # Unescaping special chars
         rowsep = rowsep.replace('\\n','\n')
         colsep = colsep.replace('\\n','\n')
         # Start parsing except text nodes
         inner = self.parse_inner()
-        output = '<table border="%s" cellpadding="%s" cellspacing="%s" frame="%s" rules="%s">' % (border, cellpadding, cellspacing, frame, rules)
+        output = '<table border="%s" cellpadding="%s" cellspacing="%s" frame="%s" rules="%s"%s>' % (border, cellpadding, cellspacing, frame, rules, css)
         if order == 'rowsfirst':
             rowcols = map(lambda x: map(lambda x: x.strip(), x.split(colsep)), map(lambda x: x.strip(), inner.split(rowsep)))
         else:
