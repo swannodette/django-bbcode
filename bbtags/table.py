@@ -134,7 +134,7 @@ class Table(MultiArgumentTagNode):
                 inner += node.parse()
             elif node.raw_content.strip():
                 soft_raise("Only rows are allowed directly nested inside a table")
-        return '<table border="%s" cellpadding="%s" cellspacing="%s" frame="%s" rules="%s"%s>%s</table>' % (border, cellpadding, cellspacing, frame, rules, inner, css)
+        return '<table border="%s" cellpadding="%s" cellspacing="%s" frame="%s" rules="%s"%s>%s</table>' % (border, cellpadding, cellspacing, frame, rules, css, inner)
     
     def parse_simple(self):
         """
