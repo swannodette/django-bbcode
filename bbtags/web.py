@@ -38,6 +38,8 @@ class Url(TagNode):
             css = ' class="%s"' % gd['css']
         else:
             css = ''
+        href = self.variables.resolve(href)
+        css = self.variables.resolve(css)
         return '<a href="%s"%s>%s</a>' % (href, css, inner)
     
 
