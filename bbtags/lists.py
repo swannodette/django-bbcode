@@ -30,7 +30,7 @@ class OL(MultiArgumentTagNode):
     def list_parse(self):
         # Parse list items ([*])
         if self.arguments.itemcss:
-            css = ' class="%s"' % self.arguments.itemcss
+            css = ' class="%s"' % self.arguments.itemcss.replace(',',' ')
         else:
             css = ''
         items = self.parse_inner().split('[*]')[1:]
@@ -41,7 +41,7 @@ class OL(MultiArgumentTagNode):
         
     def parse(self):
         if self.arguments.css:
-            css = ' class="%s"' % self.arguments.css
+            css = ' class="%s"' % self.arguments.css.replace(',',' ')
         else:
             css = ''
         return '<ol%s>%s</ol>'  % (css, self.list_parse())
@@ -70,7 +70,7 @@ class UL(OL):
     
     def parse(self):
         if self.arguments.css:
-            css = ' class="%s"' % self.arguments.css
+            css = ' class="%s"' % self.arguments.css.replace(',',' ')
         else:
             css = ''
         return '<ul%s>%s</ul>'  % (css, self.list_parse())

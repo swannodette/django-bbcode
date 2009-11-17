@@ -124,7 +124,7 @@ class Table(MultiArgumentTagNode):
         else:
             rules = self._arguments['rules']
         if self.arguments.css:
-            css = ' class="%s"' % self.arguments.css
+            css = ' class="%s"' % self.arguments.css.replace(',',' ')
         else:
             css = ''
         # Remove invalid Text nodes
@@ -188,7 +188,7 @@ class Table(MultiArgumentTagNode):
         else:
             rules = self._arguments['rules']
         if self.arguments.css:
-            css = ' class="%s"' % self.arguments.css
+            css = ' class="%s"' % self.arguments.css.replace(',',' ')
         else:
             css = ''
         # Unescaping special chars

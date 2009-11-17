@@ -35,7 +35,7 @@ class Url(TagNode):
             href = self.variables.resolve(inner)
             inner = href
         if gd['css']:
-            css = ' class="%s"' % gd['css']
+            css = ' class="%s"' % gd['css'].replace(',',' ')
         else:
             css = ''
         href = self.variables.resolve(href)
