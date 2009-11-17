@@ -10,12 +10,13 @@ class Url(TagNode):
     [url=<http://www.domain.com>]Text[/url]
     [url]http://www.domain.com[/url]
     """
-    verbose_name = 'Link' 
+    verbose_name = 'Link'
     open_pattern = re.compile(r'(\[url\]|\[url="?(?P<href>[^]]+)"?\]|\[url (?P<arg1>\w+)="?(?P<val1>[^ ]+)"?( (?P<arg2>\w+)="?(?P<val2>[^ ]+)"?)?\])')
     close_pattern = re.compile(patterns.closing % 'url')
     
     def parse(self):
         gd = self.match.groupdict()
+        gd.update({'css':''})
         if gd['arg1']:
             gd[gd['arg1']] = gd['val1']
         if gd['arg2']:
