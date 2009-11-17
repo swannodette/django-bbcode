@@ -1,7 +1,7 @@
 from bbcode import *
 import re
 
-class Url(ArgumentTagNode):
+class Url(TagNode):
     """
     Creates a hyperlink.
     
@@ -10,13 +10,19 @@ class Url(ArgumentTagNode):
     [url=<http://www.domain.com>]Text[/url]
     [url]http://www.domain.com[/url]
     """
-    verbose_name = 'Link'
-    open_pattern = re.compile(patterns.single_argument % 'url')
+    verbose_name = 'Link' 
+    open_pattern = re.compile(r'(\[url\]|\[url="?(?P<href>[^]]+)"?\]|\[url (?P<arg1>\w+)="?(?P<val1>[^ ]+)"?( (?P<arg2>\w+)="?(?P<val2>[^ ]+)"?)?\])')
     close_pattern = re.compile(patterns.closing % 'url')
     
     def parse(self):
-        if self.argument:
-            return '<a href="%s">%s</a>' % (self.argument, self.parse_inner())
+        gd = self.match.groupdict()
+        if gd['arg1']:
+            gd[gd['arg1']] = gd['val1']
+        if gd['arg2']:
+            gd[gd['arg2']] = gd['val2']
+        if gd['href']:
+            href = gd['href']
+            inner = self.parse_inner()
         else:
             inner = ''
             for node in self.nodes:
@@ -25,8 +31,13 @@ class Url(ArgumentTagNode):
                     return self.raw_content
                 else:
                     inner += node.raw_content
-            inner = self.variables.resolve(inner)
-            return '<a href="%s">%s</a>' % (inner, inner)
+            href = self.variables.resolve(inner)
+            inner = href
+        if gd['css']:
+            css = ' class="%s"' % gd['css']
+        else:
+            css = ''
+        return '<a href="%s"%s>%s</a>' % (href, css, inner)
     
 
 class Email(ArgumentTagNode):
