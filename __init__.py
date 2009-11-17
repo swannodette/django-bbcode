@@ -78,6 +78,16 @@ class NeedsSubclassingError(Exception): pass
 class ParserError(Exception): pass
 
 
+class SoftException(object):
+    def __init__(self, lineno, message):
+        self.lineno = lineno
+        self.message = message
+        
+    def __str__(self):
+        return '<span class="bbcode-error lineno">Line %s:</span> <span class="bbcode-error message">%s</span>' % (self.lineno, self.message)
+    __unicode__ = __str__
+
+
 class SoftExceptionManager(object):
     """
     Allows 'soft exceptions'. Soft exceptions are exceptions which don't break
@@ -100,7 +110,7 @@ class SoftExceptionManager(object):
         and the exception message. If deployed in django it will make the 
         message i18n ready.
         """
-        self.exceptions.append((self.line_number, _(exception)))
+        self.exceptions.append(SoftException(self.line_number, _(exception)))
         
     def pull(self):
         """
