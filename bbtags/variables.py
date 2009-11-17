@@ -13,8 +13,8 @@ class BBStyleVariableDefinition(TagNode):
     """
     [define]varname=value[/define]
     """
-    open_pattern = re.compile(patterns.no_argument % 'define')
-    close_pattern = re.compile(patterns.closing % 'define')
+    open_pattern = re.compile(patterns.no_argument % 'def')
+    close_pattern = re.compile(patterns.closing % 'def')
     
     def parse(self):
         inner = ''
@@ -25,7 +25,7 @@ class BBStyleVariableDefinition(TagNode):
             else:
                 inner += node.raw_content
         match = inner_re.match(inner)
-        if match:
+        if not match:
             soft_raise("invalid syntax in define tag: inner must be 'name = value'")
             return self.raw_content
         name = match.groupdict()['name']
@@ -33,3 +33,4 @@ class BBStyleVariableDefinition(TagNode):
         real_value = self.variables.resolve(value)
         self.variables.add(name, real_value)
         return ''
+register(BBStyleVariableDefinition)

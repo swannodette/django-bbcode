@@ -131,6 +131,17 @@ class VariableScope(dict):
         for var, value in dict.iteritems(self):
             context = context.replace('$%s$' % var, value)
         return context
+    
+    def lazy_resolve(self, context):
+        class Lazy:
+            def __init__(self, resolver, context):
+                self.resolver = resolver
+                self.context = context
+                
+            def __getattr__(self, attr):
+                self.context = self.resolver(self.context)
+                return self.context.__getattribute__(attr)
+        return Lazy(self.resolve, context)
 
 
 class Node(object):
@@ -328,7 +339,7 @@ class ArgumentTagNode(TagNode):
     def __init__(self, parent, match, content):
         TagNode.__init__(self, parent, match, content)
         arg = match.group('argument')
-        self.argument = self.variables.resolve(arg.strip('"') if arg else '')
+        self.argument = self.variables.lazy_resolve(arg.strip('"') if arg else '')
         
     def __str__(self):
         return '%s (%s)' % (self.__class__.__name__, self.argument)
@@ -358,7 +369,7 @@ class MultiArgumentTagNode(TagNode):
             if not index or not index % 3:
                 continue
             if not (index + 1) % 3:
-                kwargs[args[index - 1]] = self.variables.resolve(value)
+                kwargs[args[index - 1]] = self.variables.lazy_resolve(value)
         self.arguments = _MultiArgs(kwargs)
         
     def __str__(self):

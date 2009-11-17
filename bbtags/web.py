@@ -25,6 +25,7 @@ class Url(ArgumentTagNode):
                     return self.raw_content
                 else:
                     inner += node.raw_content
+            inner = self.variables.resolve(inner)
             return '<a href="%s">%s</a>' % (inner, inner)
     
 
