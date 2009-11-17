@@ -32,7 +32,7 @@ class P(ReplaceTagNode):
     close_pattern = re.compile(patterns.closing % 'p')
     
     
-class H1(ReplaceTagNode):
+class Title(ReplaceTagNode):
     """
     Creates a title.
     
@@ -40,11 +40,12 @@ class H1(ReplaceTagNode):
     
     [title]Text[/title]
     """
+    tagname = 'h1'
     verbose_name = 'Title'
     open_pattern = re.compile(patterns.no_argument % 'title')
     close_pattern = re.compile(patterns.closing % 'title')
     
-class H2(ReplaceTagNode):
+class Subtitle(ReplaceTagNode):
     """
     Creates a subtitle.
     
@@ -52,9 +53,46 @@ class H2(ReplaceTagNode):
     
     [subtitle]Text[/subtitle]
     """
+    tagname = 'h2'
     verbose_name = 'Subtitle'
     open_pattern = re.compile(patterns.no_argument % 'subtitle')
     close_pattern = re.compile(patterns.closing % 'subtitle')
+    
+    
+class H1(ReplaceTagNode):
+    verbose_name = 'Heading 1'
+    open_pattern = re.compile(patterns.no_argument % 'h1')
+    close_pattern = re.compile(patterns.closing % 'h1')
+    
+    
+class H2(ReplaceTagNode):
+    verbose_name = 'Heading 2'
+    open_pattern = re.compile(patterns.no_argument % 'h2')
+    close_pattern = re.compile(patterns.closing % 'h2')
+    
+    
+class H3(ReplaceTagNode):
+    verbose_name = 'Heading 3'
+    open_pattern = re.compile(patterns.no_argument % 'h3')
+    close_pattern = re.compile(patterns.closing % 'h3')
+    
+    
+class H4(ReplaceTagNode):
+    verbose_name = 'Heading 4'
+    open_pattern = re.compile(patterns.no_argument % 'h4')
+    close_pattern = re.compile(patterns.closing % 'h4')
+    
+    
+class H5(ReplaceTagNode):
+    verbose_name = 'Heading 5'
+    open_pattern = re.compile(patterns.no_argument % 'h5')
+    close_pattern = re.compile(patterns.closing % 'h5')
+    
+    
+class H6(ReplaceTagNode):
+    verbose_name = 'Heading 6'
+    open_pattern = re.compile(patterns.no_argument % 'h6')
+    close_pattern = re.compile(patterns.closing % 'h6')
     
     
 class Heading(ArgumentTagNode):
