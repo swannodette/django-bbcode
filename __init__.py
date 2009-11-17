@@ -124,6 +124,14 @@ class SoftExceptionManager(object):
 sem = SoftExceptionManager()
 soft_raise = sem.soft_raise
 
+class VariableScope(dict):
+    def add(self, name, value):
+        dict.__setitem__(self, name, value)
+    def resolve(self, context):
+        for var, value in dict.iteritems(self):
+            context = context.replace('$%s$' % var, value)
+        return context
+
 
 class Node(object):
     """
@@ -159,6 +167,8 @@ class Node(object):
         self.parent = parent
         self.match = match
         self.nodes = []
+        # copy the variable scope
+        self.variables = parent.variables
         
     def soft_raise(self, errmsg):
         soft_raise(errmsg)
@@ -216,6 +226,7 @@ class HeadNode(Node):
     def __init__(self, raw_content):
         self.raw_content = raw_content
         self.nodes = []
+        self.variables = VariableScope()
     
     def pull(self, end):
         raise ParserError, "Cannot pull from headnode, invalid BBCode Tree"
@@ -237,7 +248,7 @@ class TextNode(Node):
     def __init__(self, text):
         self.text = text
         self.raw_content = text
-        self.nodes = []        
+        self.nodes = []
         
     def append(self, text):
         raise TypeError, "TextNode does not support appending"
@@ -315,9 +326,9 @@ class ArgumentTagNode(TagNode):
     group 'argument'.
     """
     def __init__(self, parent, match, content):
-        arg = match.group('argument')
-        self.argument = arg.strip('"') if arg else ''
         TagNode.__init__(self, parent, match, content)
+        arg = match.group('argument')
+        self.argument = self.variables.resolve(arg.strip('"') if arg else '')
         
     def __str__(self):
         return '%s (%s)' % (self.__class__.__name__, self.argument)
@@ -340,15 +351,15 @@ class MultiArgumentTagNode(TagNode):
     """
     _arguments   = []
     def __init__(self, parent, match, content):
+        TagNode.__init__(self, parent, match, content)
         args = match.groups()
         kwargs = dict(self._arguments)
         for index, value in enumerate(filter(bool, args)):
             if not index or not index % 3:
                 continue
             if not (index + 1) % 3:
-                kwargs[args[index - 1]] = value
+                kwargs[args[index - 1]] = self.variables.resolve(value)
         self.arguments = _MultiArgs(kwargs)
-        TagNode.__init__(self, parent, match, content)
         
     def __str__(self):
         args = []
@@ -370,6 +381,7 @@ class SelfClosingTagNode(TagNode):
         self.parent = parent
         self.match = match
         self.nodes = []
+        self.variables = parent.variables
     
     def pushed(self):
         """
@@ -526,6 +538,8 @@ class Library(object):
         if not include or '__all__' in include:
             tags = set(self.tags['__all__'])
         else:
+            if 'base' in include:
+                tags = set(self.tags['__all__'])
             for ns in include:
                 tags = tags.union(self.tags[ns])
         # Then exclude
