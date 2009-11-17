@@ -85,7 +85,7 @@ class Heading(ArgumentTagNode):
         
 
 
-class I(ReplaceTagNode):
+class Em(ReplaceTagNode):
     """
     Makes text italic.
     
@@ -440,7 +440,7 @@ class Code(ArgumentTagNode):
         return hilighted
 
 
-register(I)
+register(Em)
 register(H2)
 register(Strong)
 register(P)
