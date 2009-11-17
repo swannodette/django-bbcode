@@ -87,6 +87,7 @@ class Img(ArgumentTagNode):
                 return self.raw_content
             else:
                 inner += node.raw_content
+        inner = self.variables.resolve(inner)
         if self.argument:
             return '<img src="%s" alt="image" class="img-%s" />' % (inner, self.argument)
         else:
