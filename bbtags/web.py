@@ -1,5 +1,6 @@
 from bbcode import *
 import re
+import urllib
 
 class Url(TagNode):
     """
@@ -38,7 +39,7 @@ class Url(TagNode):
             css = ' class="%s"' % gd['css'].replace(',',' ')
         else:
             css = ''
-        href = self.variables.resolve(href)
+        href = urllib.quote(self.variables.resolve(href))
         css = self.variables.resolve(css)
         return '<a href="%s"%s>%s</a>' % (href, css, inner)
     
