@@ -57,20 +57,30 @@ class BBStyleArguments(TagNode):
             return self.parse_multi(dict(map(lambda x: x.split('='), filter(bool, self.args.split(' ')))))
             
     def parse_multi(self, argdict):
+        def recurse(nodes, argdict):
+            for node in nodes:
+                if hasattr(node, 'arguments'):
+                    for key, value in node.arguments.iteritems():
+                        if key in argdict:
+                            node.arguments[key] = argdict[key]
+                if node.nodes:
+                    recurse(nodes, argdict)
+        recurse(self.nodes, argdict)
         inner = ''
         for node in self.nodes:
-            if hasattr(node, 'arguments'):
-                for key, value in node.arguments.iteritems():
-                    if key in argdict:
-                        node.arguments[key] = argdict[key]
             inner += node.parse()
         return inner
     
     def parse_single(self, arg):
+        def recurse(nodes, argument):
+            for node in nodes:
+                if hasattr(node, 'argument'):
+                    node.argument = argument
+                if node.nodes:
+                    recurse(nodes, argument)
+        recurse(self.nodes, arg)
         inner = ''
         for node in self.nodes:
-            if hasattr(node, 'argument'):
-                node.argument = arg
             inner += node.parse()
         return inner
     
