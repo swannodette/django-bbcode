@@ -476,6 +476,16 @@ class Code(ArgumentTagNode):
         formatter = HtmlFormatter(cssclass='code', noclasses=True, linenos='inline')
         hilighted = highlight(inner, lexer, formatter)
         return hilighted
+    
+    
+class Strike(TagNode):
+    open_pattern = re.compile(patterns.no_argument % 'strike')
+    close_pattern = re.compile(patterns.closing % 'strike')
+    verbose_name = 'Strike Through'
+    
+    def parse(self):
+        return '<span style="text-decoration:line-through;">%s</span>' % self.parse_inner()
+    
 
 
 register(Em)
