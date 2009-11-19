@@ -12,7 +12,7 @@ class Url(TagNode):
     [url]http://www.domain.com[/url]
     """
     verbose_name = 'Link'
-    open_pattern = re.compile(r'(\[url\]|\[url="?(?P<href>[^]]+)"?\]|\[url (?P<arg1>\w+)="?(?P<val1>[^ ]+)"?( (?P<arg2>\w+)="?(?P<val2>[^ ]+)"?)?\])')
+    open_pattern = re.compile(r'(\[url\]|\[url="?(?P<href>[^\]]+)"?\]|\[url (?P<arg1>\w+)="?(?P<val1>[^ ]+)"?( (?P<arg2>\w+)="?(?P<val2>[^ ]+)"?)?\])')
     close_pattern = re.compile(patterns.closing % 'url')
     
     def parse(self):
