@@ -39,7 +39,11 @@ class Url(TagNode):
             css = ' class="%s"' % gd['css'].replace(',',' ')
         else:
             css = ''
-        href = urllib.quote(self.variables.resolve(href))
+        raw_href = self.variables.resolve(href)
+        if raw_href.startswith('http://'):
+            href = raw_href[:7] + urllib.quote(raw_href[7:])
+        else:
+            href = urllib.quote(raw_href)
         css = self.variables.resolve(css)
         return '<a href="%s"%s>%s</a>' % (href, css, inner)
     
