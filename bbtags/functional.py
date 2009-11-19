@@ -64,7 +64,7 @@ class BBStyleArguments(TagNode):
                         if key in argdict:
                             node.arguments[key] = argdict[key]
                 if node.nodes:
-                    recurse(nodes, argdict)
+                    recurse(node.nodes, argdict)
         recurse(self.nodes, argdict)
         inner = ''
         for node in self.nodes:
@@ -77,7 +77,7 @@ class BBStyleArguments(TagNode):
                 if hasattr(node, 'argument'):
                     node.argument = argument
                 if node.nodes:
-                    recurse(nodes, argument)
+                    recurse(node.nodes, argument)
         recurse(self.nodes, arg)
         inner = ''
         for node in self.nodes:
