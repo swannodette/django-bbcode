@@ -126,7 +126,7 @@ soft_raise = sem.soft_raise
 
 class VariableScope(dict):
     def add(self, name, value):
-        dict.__setitem__(self, name, value)
+        dict.__setitem__(self, str(name), str(value))
     def resolve(self, context):
         for var, value in dict.iteritems(self):
             context = context.replace('$%s$' % var, value)
@@ -137,6 +137,10 @@ class VariableScope(dict):
             def __init__(self, resolver, context):
                 self.resolver = resolver
                 self.context = context
+                
+            def __int__(self):
+                self.context = self.resolver(self.context)
+                return int(self.context)
                 
             def __getattr__(self, attr):
                 self.context = self.resolver(self.context)

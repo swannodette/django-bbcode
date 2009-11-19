@@ -43,6 +43,7 @@ class BBStyleArguments(TagNode):
     """
     open_pattern = re.compile('\[args(?P<args>(=[^\]]+)| ([^\]]+))\]')
     close_pattern = re.compile(patterns.closing % 'args')
+    verbose_name = 'Arguments'
     
     def __init__(self, parent, match, content):
         TagNode.__init__(self, parent, match, content)
@@ -84,5 +85,43 @@ class BBStyleArguments(TagNode):
             inner += node.parse()
         return inner
     
+
+class BBStyleRange(MultiArgumentTagNode):
+    _arguments = {
+        'start': '1',
+        'end': '',
+        'name': 'index',
+        'zeropad': '3'
+    }
+    
+    @staticmethod
+    def open_pattern():
+        pat = r'\[range'
+        for arg in BBStyleRange._arguments:
+            pat += patterns.argument
+        pat += r'\]'
+        return re.compile(pat)
+    
+    close_pattern = re.compile(patterns.closing % 'range')
+    verbose_name = 'Range'
+    
+    def parse(self):
+        if not self.arguments.end:
+            return self.soft_raise('Range tag requires an end argument')
+        if not self.arguments.start.isdigit() or not self.arguments.end.isdigit():
+            return self.soft_raise('Range arguments must be digits')
+        if not self.arguments.zeropad.isdigit():
+            return self.soft_raise('Range argument zeropad must be digit')
+        start = int(str(self.arguments.start))
+        end   = int(str(self.arguments.end))
+        zeropad = int(str(self.arguments.zeropad))
+        if start < 0 or end < start:
+            return self.soft_raise('Range arguments start must be positive and end must be bigger than start')
+        output = ''
+        for i in range(start, end + 1):
+            self.variables.add(self.arguments.name, '%%0%si' % zeropad % i)
+            output += self.parse_inner()
+        return output
 register(BBStyleArguments)
 register(BBStyleVariableDefinition)
+register(BBStyleRange)
