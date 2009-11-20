@@ -416,7 +416,7 @@ class Text(ArgumentTagNode):
     """
     open_pattern = re.compile(patterns.single_argument % 'text')
     close_pattern = re.compile(patterns.closing % 'text')
-    _allowed = ('left','right','justify')
+    _allowed = ('left','right','justify', 'center')
     
     def parse(self):
         if not self.argument:
@@ -427,7 +427,7 @@ class Text(ArgumentTagNode):
         if not argument in self._allowed:
             soft_raise("Text alignment '%s' not allowed." % argument)
             return self.parse_inner()
-        return '<div class="%s">%s</div>' % (argument, self.parse_inner())
+        return '<span style="text-align:%s;">%s</span>' % (argument, self.parse_inner())
 
 
 class Code(ArgumentTagNode):

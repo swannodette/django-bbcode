@@ -110,7 +110,7 @@ class Img(ArgumentTagNode):
         if self.argument:
             return '<img src="%s" alt="image" class="img-%s" />' % (inner, self.argument)
         else:
-            return '<img src="%s" alt="image" class="img-left" />' % inner
+            return '<img src="%s" alt="image" />' % inner
     
     
 class Youtube(TagNode):
