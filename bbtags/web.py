@@ -92,7 +92,7 @@ class Img(ArgumentTagNode):
     
     Arguments:
     
-    Allowed values for <align>: left, center, right. Default: left.
+    Allowed values for <align>: left, center, right. Default: None.
     """
     verbose_name = 'Image'
     open_pattern = re.compile(patterns.single_argument % 'img')

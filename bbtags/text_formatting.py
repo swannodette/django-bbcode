@@ -427,7 +427,7 @@ class Text(ArgumentTagNode):
         if not argument in self._allowed:
             soft_raise("Text alignment '%s' not allowed." % argument)
             return self.parse_inner()
-        return '<span style="text-align:%s;">%s</span>' % (argument, self.parse_inner())
+        return '<p style="text-align:%s;">%s</p>' % (argument, self.parse_inner())
 
 
 class Code(ArgumentTagNode):
