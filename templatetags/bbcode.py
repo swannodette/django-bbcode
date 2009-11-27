@@ -36,7 +36,7 @@ class BBCodeNode(template.Node):
                 namespaces = namespaces.union(ns)
             else:
                 namespaces.add(ns)
-        parsed, errors = parse(content, namespaces, False, True)
+        parsed, errors = parse(content, namespaces, False, True, context)
         if self.varname:
             context[self.varname] = parsed
             return ''

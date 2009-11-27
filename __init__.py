@@ -170,7 +170,7 @@ class Node(object):
     
     is_text_node = False
     
-    def __init__(self, parent, match, fullcontent):
+    def __init__(self, parent, match, fullcontent, context=None):
         """
         Normal nodes take their parent node as first argument, the regular
         expression match as second argument and the full context as third
@@ -182,6 +182,7 @@ class Node(object):
         self.parent = parent
         self.match = match
         self.nodes = []
+        self.context = context # for django only
         # copy the variable scope
         self.variables = parent.variables
         
@@ -199,7 +200,7 @@ class Node(object):
         """
         Adds a nested tag node and returns that node
         """
-        node = nodeklass(self, match, fullcontent)
+        node = nodeklass(self, match, fullcontent, self.context)
         self.nodes.append(node)
         return node.pushed()
     
@@ -238,9 +239,10 @@ class HeadNode(Node):
     The head node of the BBCode parse tree.
     """
     name = 'head'
-    def __init__(self, raw_content):
+    def __init__(self, raw_content, context=None):
         self.raw_content = raw_content
         self.nodes = []
+        self.context = conctext
         self.variables = VariableScope()
     
     def pull(self, end):
@@ -320,13 +322,13 @@ class ReplaceTagNode(TagNode):
     Requires an explicit 'tagname' attribute, otherwise the lowered class name
     will be used as tagname
     """
-    def __init__(self, parent, match, content):
+    def __init__(self, parent, match, content, context):
         """
         Implicitly set tag name if not available.
         """
         if not hasattr(self, 'tagname'):
             self.tagname = self.__class__.__name__.lower()
-        TagNode.__init__(self, parent, match, content)
+        TagNode.__init__(self, parent, match, content, context)
         
     def parse(self):
         return '<%s>%s</%s>' % (self.tagname, self.parse_inner(), self.tagname)
@@ -340,8 +342,8 @@ class ArgumentTagNode(TagNode):
     TagNode which takes one (or no) argument. Open pattern must have a named
     group 'argument'.
     """
-    def __init__(self, parent, match, content):
-        TagNode.__init__(self, parent, match, content)
+    def __init__(self, parent, match, content, context):
+        TagNode.__init__(self, parent, match, content, context)
         arg = match.group('argument')
         self.argument = self.variables.lazy_resolve(arg.strip('"') if arg else '')
         
@@ -365,8 +367,8 @@ class MultiArgumentTagNode(TagNode):
     expression.
     """
     _arguments   = []
-    def __init__(self, parent, match, content):
-        TagNode.__init__(self, parent, match, content)
+    def __init__(self, parent, match, content, context):
+        TagNode.__init__(self, parent, match, content, context)
         args = match.groups()
         kwargs = dict(self._arguments)
         for index, value in enumerate(filter(bool, args)):
@@ -389,8 +391,9 @@ class SelfClosingTagNode(TagNode):
     """
     close_pattern = patterns.unmatchable
     
-    def __init__(self, parent, match, content):
+    def __init__(self, parent, match, content, context):
         self.start = match.start()
+        self.context = context
         self.fullcontent = content
         self.raw_content = content[match.start():match.end()]
         self.parent = parent
@@ -585,7 +588,7 @@ class Library(object):
         # Sort by position
         return sorted(taglist)
     
-    def get_parse_tree(self, content, namespaces=['__all__']):
+    def get_parse_tree(self, content, namespaces=['__all__'], context=None):
         """
         Prepare content for parsing.
         Returns a HeadNode instance
@@ -593,7 +596,7 @@ class Library(object):
         taglist = self.get_taglist(content, namespaces)
         
         # Get headnode
-        headnode = HeadNode(content)
+        headnode = HeadNode(content, context)
         
         lastpos = 0
         currentnode = headnode
@@ -679,7 +682,8 @@ def register_text_parser(parser=None, order=512):
         return parser
     return deco
     
-def parse(content, namespaces=['__all__'], strict=True, auto_discover=False):
+def parse(content, namespaces=['__all__'], strict=True, auto_discover=False,
+          context=None):
     """
     Parse a content with the BBCodes
     """
@@ -689,10 +693,10 @@ def parse(content, namespaces=['__all__'], strict=True, auto_discover=False):
     content = content.replace('\r','')
     # Get head node
     if strict:
-        head = lib.get_parse_tree(content, namespaces)
+        head = lib.get_parse_tree(content, namespaces, context)
     else:
         try:
-            head = lib.get_parse_tree(content, namespaces)
+            head = lib.get_parse_tree(content, namespaces, context)
         except ParserError:
             return convert_linefeeds(content), sem.pull()
     # parse BB Codes
