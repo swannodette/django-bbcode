@@ -1,4 +1,5 @@
 from django import template
+from django.utils.safestring import mark_safe
 parse = __import__('bbcode',level=0).parse
 
 register = template.Library()
@@ -40,7 +41,7 @@ class BBCodeNode(template.Node):
             context[self.varname] = parsed
             return ''
         else:
-            return parsed
+            return pmark_safe(arsed)
 
 @register.tag
 def bbcode(parser, token):
