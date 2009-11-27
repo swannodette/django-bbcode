@@ -8,11 +8,7 @@ class BBCodeTextField(models.TextField):
     BBCodeFormField form field to validate bbcode input (eg. in admin)
     """
     def formfield(self, **kwargs):
-        # This is a fairly standard way to set up some defaults
-        # while letting the caller override them.
-        defaults = {'form_class': BBCodeFormField}
-        defaults.update(kwargs)
-        return models.TextField.formfield(self, **defaults)
+        return models.CharField.formfield(self, form_class=BBCodeFormField, **defaults)
 
 class BBCodeCharField(models.CharField):
     """
@@ -20,11 +16,7 @@ class BBCodeCharField(models.CharField):
     BBCodeFormField form field to validate bbcode input (eg. in admin)
     """
     def formfield(self, **kwargs):
-        # This is a fairly standard way to set up some defaults
-        # while letting the caller override them.
-        defaults = {'form_class': BBCodeFormField}
-        defaults.update(kwargs)
-        return models.CharField.formfield(self, **defaults)
+        return models.CharField.formfield(self, form_class=BBCodeFormField, **defaults)
     
     
 class BBCodeFormField(forms.CharField):
@@ -35,5 +27,5 @@ class BBCodeFormField(forms.CharField):
         preclean = forms.CharField.clean(self, content)
         errors = validate(preclean)
         if errors:
-            raise forms.ValidationError('\n'.join(map(lambda x: 'Line: %s: %s' % x, errors)))
+            raise forms.ValidationError('\n'.join(map(lambda x: 'Line: %s: %s' % (x.lineno, x.message), errors)))
         return content
