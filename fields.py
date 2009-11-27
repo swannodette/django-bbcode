@@ -35,5 +35,5 @@ class BBCodeFormField(forms.CharField):
         preclean = forms.CharField.clean(self, content)
         errors = validate(preclean)
         if errors:
-            raise forms.ValidationError('\n'.join(errors))
+            raise forms.ValidationError('\n'.join(map(lambda x: 'Line: %s: %s' % x, errors)))
         return content
