@@ -41,7 +41,7 @@ class BBCodeNode(template.Node):
             context[self.varname] = parsed
             return ''
         else:
-            return pmark_safe(arsed)
+            return mark_safe(arsed)
 
 @register.tag
 def bbcode(parser, token):
