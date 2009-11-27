@@ -8,7 +8,7 @@ class BBCodeTextField(models.TextField):
     BBCodeFormField form field to validate bbcode input (eg. in admin)
     """
     def formfield(self, **kwargs):
-        return models.CharField.formfield(self, form_class=BBCodeFormField, **defaults)
+        return models.CharField.formfield(self, form_class=BBCodeFormField, **kwargs)
 
 class BBCodeCharField(models.CharField):
     """
@@ -16,7 +16,7 @@ class BBCodeCharField(models.CharField):
     BBCodeFormField form field to validate bbcode input (eg. in admin)
     """
     def formfield(self, **kwargs):
-        return models.CharField.formfield(self, form_class=BBCodeFormField, **defaults)
+        return models.CharField.formfield(self, form_class=BBCodeFormField, **kwargs)
     
     
 class BBCodeFormField(forms.CharField):
