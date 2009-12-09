@@ -242,7 +242,7 @@ class HeadNode(Node):
     def __init__(self, raw_content, context=None):
         self.raw_content = raw_content
         self.nodes = []
-        self.context = conctext
+        self.context = context
         self.variables = VariableScope()
     
     def pull(self, end):
