@@ -127,7 +127,9 @@ soft_raise = sem.soft_raise
 class VariableScope(dict):
     def add(self, name, value):
         dict.__setitem__(self, str(name), str(value))
+        
     def resolve(self, context):
+        context = context.strip('"')
         for var, value in dict.iteritems(self):
             context = context.replace('$%s$' % var, value)
         return context

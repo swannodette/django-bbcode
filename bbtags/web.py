@@ -23,7 +23,7 @@ class Url(TagNode):
         if gd['arg2']:
             gd[gd['arg2']] = gd['val2']
         if gd['href']:
-            href = gd['href']
+            href = self.variables.resolve(gd['href'])
             inner = self.parse_inner()
         else:
             inner = ''
