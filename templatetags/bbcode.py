@@ -147,10 +147,10 @@ def bbhelp(parser, token):
             raw_namespaces.append(bit)
     # template check
     if bit == 'using':
-        tplfile = bit.pop(0)
+        tplfile = bits.pop(0)
     # varname check 
     elif bit == 'as':
-        varname = bit.pop(0)
+        varname = bits.pop(0)
     else:
         raise template.TemplateSyntaxError, "bbhelp requires either an 'as varname' or 'using template' argument"
     # convert raw_tags/raw_namespaces to list of tags
