@@ -8,7 +8,7 @@ class OL(MultiArgumentTagNode):
     
     Usage:
     
-    [code=bbcode][ol]
+    [code=bbdocs][ol]
   [*] First item
   [*] Second item
 [/ol][/code]
@@ -53,10 +53,10 @@ class UL(OL):
     
     Usage:
     
-        [code=bbcode][ul]
+        [code=bbdocs][ul]
   [*] First item
   [*] Second item
-[code=bbcode][/ul]
+[code=bbdocs][/ul]
     """
     @staticmethod
     def open_pattern():

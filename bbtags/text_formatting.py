@@ -1,5 +1,14 @@
 from bbcode import *
 import re
+# Pygments if available
+try:
+    from pygments import highlight
+    from pygments.lexers import guess_lexer, get_lexer_by_name, TextLexer
+    from pygments.formatters import HtmlFormatter
+    from pygments.util import ClassNotFound
+    from bbcode import mypygments
+except ImportError:
+    highlight = None
 
 
 class HR(SelfClosingTagNode):
@@ -8,7 +17,7 @@ class HR(SelfClosingTagNode):
     
     Usage:
     
-    [code=bbcode][hr /][/code]
+    [code=bbdocs][hr /][/code]
     
     Note: This tag has no closing tag!
     """
@@ -25,7 +34,7 @@ class P(ReplaceTagNode):
     
     Usage:
     
-    [code=bbcode][p]Text[/p][/code]
+    [code=bbdocs][p]Text[/p][/code]
     """
     verbose_name = 'Paragraph'
     open_pattern = re.compile(patterns.no_argument % 'p')
@@ -38,7 +47,7 @@ class Title(ReplaceTagNode):
     
     Usage:
     
-    [code=bbcode][title]Text[/title][/code]
+    [code=bbdocs][title]Text[/title][/code]
     """
     tagname = 'h1'
     verbose_name = 'Title'
@@ -51,7 +60,7 @@ class Subtitle(ReplaceTagNode):
     
     Usage:
     
-    [code=bbcode][subtitle]Text[/subtitle][/code]
+    [code=bbdocs][subtitle]Text[/subtitle][/code]
     """
     tagname = 'h2'
     verbose_name = 'Subtitle'
@@ -65,7 +74,7 @@ class H(ArgumentTagNode):
     
     Usage:
     
-    [code=bbcode][hX]Text[/hX][/code]
+    [code=bbdocs][hX]Text[/hX][/code]
     
     Allowed values for [i]X[/i]: 1,2,3,4,5,6
     """
@@ -83,7 +92,7 @@ class Heading(ArgumentTagNode):
     
     Usage:
     
-    [code=bbcode][heading=<size>]Text[/heading][/code]
+    [code=bbdocs][heading=<size>]Text[/heading][/code]
     
     Arguments:
     
@@ -112,7 +121,7 @@ class Em(ReplaceTagNode):
     
     Usage:
     
-    [code=bbcode][i]Text[/i][/code]
+    [code=bbdocs][i]Text[/i][/code]
     """
     verbose_name = 'Italic'
     open_pattern = re.compile(patterns.no_argument % 'i')
@@ -125,7 +134,7 @@ class Strong(ReplaceTagNode):
     
     Usage:
     
-    [code=bbcode][b]Text[/b][/code]
+    [code=bbdocs][b]Text[/b][/code]
     """
     verbose_name = 'Bold'
     open_pattern = re.compile(patterns.no_argument % 'b')
@@ -138,7 +147,7 @@ class U(ReplaceTagNode):
     
     Usage:
     
-    [code=bbcode][u]Text[/u][/code]
+    [code=bbdocs][u]Text[/u][/code]
     """
     verbose_name = 'Underline'
     open_pattern = re.compile(patterns.no_argument % 'u')
@@ -151,7 +160,7 @@ class Size(ArgumentTagNode):
     
     Usage:
     
-    [code=bbcode][size=<size>]Text[/size][/code]
+    [code=bbdocs][size=<size>]Text[/size][/code]
     
     Arguments:
     
@@ -177,7 +186,7 @@ class Color(ArgumentTagNode):
     
     Usage:
     
-    [code=bbcode][color=<color>]Text[/color][/code]
+    [code=bbdocs][color=<color>]Text[/color][/code]
     
     Allowed values for [i]color[/i]: Any name from http://www.w3schools.com/HTML/html_colornames.asp or any hex color value.
     """
@@ -346,7 +355,7 @@ class Indent(TagNode):
     
     Usage:
     
-    [code=bbcode][indent]Text[/indent][/code]
+    [code=bbdocs][indent]Text[/indent][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'indent')
     close_pattern = re.compile(patterns.closing % 'indent')
@@ -361,7 +370,7 @@ class Outdent(TagNode):
     
     Usage:
     
-    [code=bbcode][outdent]Text[/outdent][/code]
+    [code=bbdocs][outdent]Text[/outdent][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'outdent')
     close_pattern = re.compile(patterns.closing % 'outdent')
@@ -376,7 +385,7 @@ class Quote(TagNode):
     
     Usage:
     
-    [code=bbcode][quote]Text[/quote][/code]
+    [code=bbdocs][quote]Text[/quote][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'quote')
     close_pattern = re.compile(patterns.closing % 'quote')
@@ -391,7 +400,7 @@ class Text(ArgumentTagNode):
     
     Usage:
     
-    [code=bbcode][text=<align>]Text[/text][/code]
+    [code=bbdocs][text=<align>]Text[/text][/code]
     
     Arguments:
     
@@ -419,7 +428,7 @@ class Code(ArgumentTagNode):
     
     Usage:
     
-    [code][code=bbcode]Text[/code]
+    [code][code=bbdocs]Text[/code]
 [code=<language>]Text[/code][/code]
     
     Arguments:
@@ -436,12 +445,7 @@ class Code(ArgumentTagNode):
         inner = ''
         for node in self.nodes:
             inner += node.raw_content
-        try:
-            from pygments import highlight
-            from pygments.lexers import guess_lexer, get_lexer_by_name, TextLexer
-            from pygments.formatters import HtmlFormatter
-            from pygments.util import ClassNotFound
-        except ImportError:
+        if highlight is None:
             return '<pre>%s</pre>' % inner
         if self.argument:
             try:
@@ -467,7 +471,7 @@ class Strike(TagNode):
     
     Usage:
     
-    [code=bbcode][strike]Text[/strike][/code]
+    [code=bbdocs][strike]Text[/strike][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'strike')
     close_pattern = re.compile(patterns.closing % 'strike')

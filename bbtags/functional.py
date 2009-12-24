@@ -14,14 +14,14 @@ class BBStyleVariableDefinition(TagNode):
     Stores a value in a variable.
     
     Usage:
-        [code=bbcode][def]varname=value[/def][/code]
+        [code=bbdocs][def]varname=value[/def][/code]
         
     The stored variable can be used in many other tags. Variables are wrapped in
     dollar signes when used.
     
     Example:
     
-        [code=bbcode][def]myvar=http://www.mysite.com[/def]
+        [code=bbdocs][def]myvar=http://www.mysite.com[/def]
 [url=$myvar$/someimg.png]super cool picture[/url][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'def')
@@ -52,13 +52,13 @@ class BBStyleArguments(TagNode):
     
     Usage:
     
-        [code=bbcode][args arg1=val1]
+        [code=bbdocs][args arg1=val1]
 ...
 [/args][/code]
         
     Example:
     
-        [code=bbcode][args align=right]
+        [code=bbdocs][args align=right]
 [img]http://www.mysite.com/1.png[/img]
 [img]http://www.mysite.com/2.png[/img]
 [/args][/code]
@@ -116,7 +116,7 @@ class BBStyleRange(MultiArgumentTagNode):
     
     Usage:
     
-        [code=bbcode][range start=1 end=16 name=index zeropad=3]
+        [code=bbdocs][range start=1 end=16 name=index zeropad=3]
 ...
 [/range][/code]
         
@@ -129,13 +129,13 @@ class BBStyleRange(MultiArgumentTagNode):
         
     Example:
     
-        [code=bbcode][range end=10]
+        [code=bbdocs][range end=10]
 [img]http://www.mysite.com/img_$index$.png[/img]
 [/range][/code]
         
         is the equivalent to:
     
-        [code=bbcode][img]http://www.mysite.com/img_001.png[/img]
+        [code=bbdocs][img]http://www.mysite.com/img_001.png[/img]
 [img]http://www.mysite.com/img_002.png[/img]
 [img]http://www.mysite.com/img_003.png[/img]
 [img]http://www.mysite.com/img_004.png[/img]
