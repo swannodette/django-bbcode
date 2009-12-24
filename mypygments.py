@@ -3,6 +3,8 @@ from pygments.token import *
 from pygments.lexers._mapping import LEXERS 
 import re               
 
+__all__ = ['MyBBCodeLexer']
+
 class MyBBCodeLexer(RegexLexer):
     """
     Lexer for my extended bbcode.
