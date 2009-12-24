@@ -430,7 +430,7 @@ class AutoDict(dict):
 
     def __getitem__(self, item):
         if not dict.__contains__(self, item):
-            dict.__setitem__(self, item, default_thing() if callable(default_thing) else default_thing)
+            dict.__setitem__(self, item, self.__default_thing() if callable(self.__default_thing) else self.__default_thing)
         return dict.__getitem__(self, item)
     
     
