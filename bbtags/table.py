@@ -10,7 +10,7 @@ class Table(MultiArgumentTagNode):
     
     Usage:
     
-    [code=bbdocs][table <rowsep>=\\n <colsep>=| <autohead>=1 <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none <colspanchar>=@ <simple>=0 <css>='']
+    [code=bbdocs][table rowsep=\\n colsep=| autohead=1 border=0 cellpadding=0 cellspacing=0 frame=void rules=none colspanchar=@ simple=0 css='']
 First column heading | Second column heading
 First row, first column | Second row, second column
 @2 Second row which spans over two columns
@@ -34,7 +34,7 @@ First row, first column | Second row, second column
     
     Usage:
     
-    [code=bbdocs][table <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none <css>='']
+    [code=bbdocs][table border=0 cellpadding=0 cellspacing=0 frame=void rules=none css='']
   [row]
     [head]First column heading[/head]
     [head]Second column heading[/head]
