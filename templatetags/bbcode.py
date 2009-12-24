@@ -156,14 +156,17 @@ def bbhelp(parser, token):
         raise template.TemplateSyntaxError, "bbhelp requires either an 'as varname' or 'using template' argument"
     # convert raw_tags/raw_namespaces to list of tags
     tags = set()
-    for ns in raw_namespaces:
-        tags.update(bbmodule.lib.tags[ns])
-    for tg in raw_tags:
-        tginfo = bbmodule.lib.names[tg]
-        if tginfo:
-            tags.add(tginfo['class'])
-    if not tags:
+    if raw_namespaces or raw_tags:
+        for ns in raw_namespaces:
+            tags.update(bbmodule.lib.tags[ns])
+        for tg in raw_tags:
+            tginfo = bbmodule.lib.names[tg]
+            if tginfo:
+                tags.add(tginfo['class'])
+    else:
         tags = bbmodule.lib.get_tags()
+    if not tags:
+        raise template.TemplateSyntaxError, "bbhelp requires tags."
     # Get the Node
     if tplfile:
         return BBHelpTemplateNode(tags, tplfile)
