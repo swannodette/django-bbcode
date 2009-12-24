@@ -8,7 +8,7 @@ class HR(SelfClosingTagNode):
     
     Usage:
     
-    [code][hr /][/code]
+    [code=bbcode][hr /][/code]
     
     Note: This tag has no closing tag!
     """
@@ -25,7 +25,7 @@ class P(ReplaceTagNode):
     
     Usage:
     
-    [code][p]Text[/p][/code]
+    [code=bbcode][p]Text[/p][/code]
     """
     verbose_name = 'Paragraph'
     open_pattern = re.compile(patterns.no_argument % 'p')
@@ -38,7 +38,7 @@ class Title(ReplaceTagNode):
     
     Usage:
     
-    [code][title]Text[/title][/code]
+    [code=bbcode][title]Text[/title][/code]
     """
     tagname = 'h1'
     verbose_name = 'Title'
@@ -51,7 +51,7 @@ class Subtitle(ReplaceTagNode):
     
     Usage:
     
-    [code][subtitle]Text[/subtitle][/code]
+    [code=bbcode][subtitle]Text[/subtitle][/code]
     """
     tagname = 'h2'
     verbose_name = 'Subtitle'
@@ -65,7 +65,7 @@ class H(ArgumentTagNode):
     
     Usage:
     
-    [code][hX]Text[/hX][/code]
+    [code=bbcode][hX]Text[/hX][/code]
     
     Allowed values for [i]X[/i]: 1,2,3,4,5,6
     """
@@ -83,7 +83,7 @@ class Heading(ArgumentTagNode):
     
     Usage:
     
-    [code][heading=<size>]Text[/heading][/code]
+    [code=bbcode][heading=<size>]Text[/heading][/code]
     
     Arguments:
     
@@ -112,7 +112,7 @@ class Em(ReplaceTagNode):
     
     Usage:
     
-    [code][i]Text[/i][/code]
+    [code=bbcode][i]Text[/i][/code]
     """
     verbose_name = 'Italic'
     open_pattern = re.compile(patterns.no_argument % 'i')
@@ -125,7 +125,7 @@ class Strong(ReplaceTagNode):
     
     Usage:
     
-    [code][b]Text[/b][/code]
+    [code=bbcode][b]Text[/b][/code]
     """
     verbose_name = 'Bold'
     open_pattern = re.compile(patterns.no_argument % 'b')
@@ -138,7 +138,7 @@ class U(ReplaceTagNode):
     
     Usage:
     
-    [code][u]Text[/u][/code]
+    [code=bbcode][u]Text[/u][/code]
     """
     verbose_name = 'Underline'
     open_pattern = re.compile(patterns.no_argument % 'u')
@@ -151,7 +151,7 @@ class Size(ArgumentTagNode):
     
     Usage:
     
-    [code][size=<size>]Text[/size][/code]
+    [code=bbcode][size=<size>]Text[/size][/code]
     
     Arguments:
     
@@ -177,7 +177,7 @@ class Color(ArgumentTagNode):
     
     Usage:
     
-    [code][color=<color>]Text[/color][/code]
+    [code=bbcode][color=<color>]Text[/color][/code]
     
     Allowed values for [i]color[/i]: Any name from http://www.w3schools.com/HTML/html_colornames.asp or any hex color value.
     """
@@ -346,7 +346,7 @@ class Indent(TagNode):
     
     Usage:
     
-    [code][indent]Text[/indent][/code]
+    [code=bbcode][indent]Text[/indent][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'indent')
     close_pattern = re.compile(patterns.closing % 'indent')
@@ -361,7 +361,7 @@ class Outdent(TagNode):
     
     Usage:
     
-    [code][outdent]Text[/outdent][/code]
+    [code=bbcode][outdent]Text[/outdent][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'outdent')
     close_pattern = re.compile(patterns.closing % 'outdent')
@@ -376,7 +376,7 @@ class Quote(TagNode):
     
     Usage:
     
-    [code][quote]Text[/quote][/code]
+    [code=bbcode][quote]Text[/quote][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'quote')
     close_pattern = re.compile(patterns.closing % 'quote')
@@ -391,7 +391,7 @@ class Text(ArgumentTagNode):
     
     Usage:
     
-    [code][text=<align>]Text[/text][/code]
+    [code=bbcode][text=<align>]Text[/text][/code]
     
     Arguments:
     
@@ -419,7 +419,7 @@ class Code(ArgumentTagNode):
     
     Usage:
     
-    [code][code]Text[/code]
+    [code][code=bbcode]Text[/code]
 [code=<language>]Text[/code][/code]
     
     Arguments:
@@ -467,7 +467,7 @@ class Strike(TagNode):
     
     Usage:
     
-    [code][strike]Text[/strike][/code]
+    [code=bbcode][strike]Text[/strike][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'strike')
     close_pattern = re.compile(patterns.closing % 'strike')

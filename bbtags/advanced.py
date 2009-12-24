@@ -7,7 +7,7 @@ class Hidden(TagNode):
     
     Usage:
     
-    [code][hidden]Secret content[/hidden][/code]
+    [code=bbcode][hidden]Secret content[/hidden][/code]
     """
     num = 0
     open_pattern = re.compile(patterns.no_argument % 'hidden')
