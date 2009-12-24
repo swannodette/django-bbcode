@@ -75,6 +75,11 @@ def get_tag_name(klass):
     """
     return klass.tagname if hasattr(klass, 'tagname') else klass.__name__.lower()
 
+def renderer(dikt, *keys):
+    for key in keys:
+        v = dikt[key]
+    return parse(v, auto_discover=True, strict=False)[0]
+
 
 class NeedsSubclassingError(Exception): pass
 class ParserError(Exception): pass
@@ -458,7 +463,7 @@ class Library(object):
     
     def get_default_namespaces(self, klass):
         bits = klass.__module__.split('.')
-        return (bits[-1], bits[-3])
+        return (bits[-1], bits[-3], klass.__name__.lower())
         
     def register(self, klass):
         """
@@ -485,9 +490,10 @@ class Library(object):
                 verbose_name = klass.verbose_name
             else:
                 verbose_name = self.convert(klass.__name__)
-            self.names[tagname] = {'docs': parse(docstrings.strip(), strict=False, auto_discover=True)[0],
+            self.names[tagname] = {'docs': docstrings.strip(),
                                    'name': verbose_name,
-                                   'class': klass}
+                                   'class': klass,
+                                   'docs_rendered': renderer(self.names, tagname, 'docs')}
         self.raw_names[klass.__name__] = klass
         
     def add_namespace(self, klass, *namespaces):

@@ -67,6 +67,7 @@ def bbcode(parser, token):
     
     Please use bbcode.validate(...) on your content before saving it.
     """
+    bbmodule.autodiscover()
     bits = token.contents.split()
     tag_name = bits.pop(0)
     try:
@@ -127,6 +128,7 @@ def bbhelp(parser, token):
         
     Either 'using template' or 'as varname' must be present. 
     """
+    bbmodule.autodiscover()
     bits = token.contents.split()
     tag_name = bits.pop(0)
     raw_tags = []
