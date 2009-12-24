@@ -6,7 +6,7 @@ class Table(MultiArgumentTagNode):
     """
     There are two ways of defining tables.
     
-    [b]Simple table[b]
+    [b]Simple table[/b]
     
     Usage:
     
@@ -30,7 +30,7 @@ class Table(MultiArgumentTagNode):
     [i]simple[/i]: Forces a table to be parsed as simple table when all other simple table only arguments are left at default. Default: 0
     [i]css[/i]: CSS class to give the table
     
-    [b]Classic table[b]
+    [b]Classic table[/b]
     
     Usage:
     
