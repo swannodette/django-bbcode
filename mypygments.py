@@ -17,7 +17,7 @@ class MyBBCodeLexer(RegexLexer):
             (r'[^[\]]+', Text),
             (r'(\[)(/?[^\]\n\r=]+)(\])',
              bygroups(Keyword, Keyword.Pseudo, Keyword)),
-            (r'(\[)([^\]\n\r=]+)(=)("[^\]\n\r="]+"|[^\]\n\r= ]+\])',
+            (r'(\[)([^\]\n\r=]+)(=)("[^\]\n\r="]+"|[^\]\n\r= ]+)(\])',
              bygroups(Keyword, Keyword.Pseudo, Operator, String, Keyword)),
             (r'(\[)([^\]\n\r= ]+)( )',
              bygroups(Keyword, Keyword.Pseudo, Text),
@@ -25,7 +25,7 @@ class MyBBCodeLexer(RegexLexer):
         ],
         'multiarg' : [
             (r'([^\]\n\r= ]+)(=)("[^\]\n\r="]+"|[^\]\n\r= ]+)',
-             bygroups(Keyword.Pseudo, Operator, String)),
+             bygroups(Name.Attribute, Operator, String)),
             (' ', Text),
             (r'\]', Keyword, '#pop'),
         ],
