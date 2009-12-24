@@ -69,8 +69,8 @@ class BBStyleArguments(TagNode):
     close_pattern = re.compile(patterns.closing % 'args')
     verbose_name = 'Arguments'
     
-    def __init__(self, parent, match, content):
-        TagNode.__init__(self, parent, match, content)
+    def __init__(self, parent, match, content, context):
+        TagNode.__init__(self, parent, match, content, context)
         arg = match.group('args')
         self.args = self.variables.lazy_resolve(arg.strip('"') if arg else '')
     
