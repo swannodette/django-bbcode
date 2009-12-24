@@ -162,6 +162,8 @@ def bbhelp(parser, token):
         tginfo = bbmodule.lib.names[tg]
         if tginfo:
             tags.add(tginfo['class'])
+    if not tags:
+        tags = bbmodule.lib.get_tags()
     # Get the Node
     if tplfile:
         return BBHelpTemplateNode(tags, tplfile)

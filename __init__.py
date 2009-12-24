@@ -543,10 +543,12 @@ class Library(object):
         docsname = self.names[tagname]
         return {'name': docsname['name'], 'docstring': docsname['docs'], 'tag': tagname}
     
-    def get_tags(self, namespaces):
+    def get_tags(self, namespaces=None):
         """
         Get a list of tag classes for the namespaces
         """
+        if namespaces is None:
+            namespaces = get_default_namespaces()
         tags = set()
         exclude = []
         include = []
@@ -571,10 +573,12 @@ class Library(object):
             tags = tags.difference(self.tags[ns])
         return tags
     
-    def get_taglist(self, content, namespaces=['__all__']):
+    def get_taglist(self, content, namespaces=None):
         """
         Get the tag-match list of a content for given namespaces
         """
+        if namespaces is None:
+            namespaces = get_default_namespaces()
         tags = self.get_tags(namespaces)
         # Build tag list
         taglist = []
@@ -594,11 +598,13 @@ class Library(object):
         # Sort by position
         return sorted(taglist)
     
-    def get_parse_tree(self, content, namespaces=['__all__'], context=None):
+    def get_parse_tree(self, content, namespaces=None, context=None):
         """
         Prepare content for parsing.
         Returns a HeadNode instance
         """
+        if namespaces is None:
+            namespaces = get_default_namespaces()
         taglist = self.get_taglist(content, namespaces)
         
         # Get headnode
@@ -638,7 +644,9 @@ class Library(object):
         # Return the head node
         return headnode
     
-    def get_visual_parse_tree(self, content, namespaces=['__all__'], indent=4):
+    def get_visual_parse_tree(self, content, namespaces=None, indent=4):
+        if namespaces is None:
+            namespaces = get_default_namespaces()
         def recurse(nodes, level, indent):
             cindent = level * indent
             sindent = ' ' * cindent
@@ -656,10 +664,12 @@ class Library(object):
         visuals += recurse(head.nodes, 1, indent)
         return '\n'.join(visuals)
     
-    def validate(self, content, namespaces=['__all__'], auto_discover=False):
+    def validate(self, content, namespaces=None, auto_discover=False):
         """
         Validates a given content and returns the errors or an empty sequence.
         """
+        if namespaces is None:
+            namespaces = get_default_namespaces()
         if auto_discover:
             autodiscover()
         try:
