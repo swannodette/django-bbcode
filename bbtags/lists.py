@@ -54,9 +54,9 @@ class UL(OL):
     Usage:
     
         [code][ul]
-            [*] First item
-            [*] Second item
-        [code][/ul]
+  [*] First item
+  [*] Second item
+[code][/ul]
     """
     @staticmethod
     def open_pattern():

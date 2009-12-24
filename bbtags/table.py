@@ -14,7 +14,7 @@ class Table(MultiArgumentTagNode):
 First column heading | Second column heading
 First row, first column | Second row, second column
 @2 Second row which spans over two columns
-[/table][code]
+[/table][/code]
     
     Arguments:
     
