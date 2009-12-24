@@ -76,9 +76,11 @@ def get_tag_name(klass):
     return klass.tagname if hasattr(klass, 'tagname') else klass.__name__.lower()
 
 def renderer(dikt, *keys):
-    for key in keys:
-        v = dikt[key]
-    return parse(v, auto_discover=True, strict=False)[0]
+    def lazy():
+        for key in keys:
+            v = dikt[key]
+        return parse(v, auto_discover=True, strict=False)[0]
+    return lazy
 
 
 class NeedsSubclassingError(Exception): pass
