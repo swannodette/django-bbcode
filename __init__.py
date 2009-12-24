@@ -472,8 +472,13 @@ class Library(object):
                     self.tags['__all__'].add(klass)
         elif not hasattr(klass, 'not_in_all') or not klass.not_in_all:
             self.tags['__all__'].add(klass)
-        for default in self.get_default_namespaces(klass):
+        if not hasattr(klass, 'namespaces'):
+            setattr(klass, 'namespaces', [])
+        d_namespaces = self.get_default_namespaces(klass)
+        for default in d_namespaces:
             self.tags[default].add(klass)
+        for ns in reversed(d_namespaces):
+            klass.namespaces.insert(0, ns)
         # Register documentation
         docstrings = klass.__doc__
         if hasattr(klass, 'tagname'):

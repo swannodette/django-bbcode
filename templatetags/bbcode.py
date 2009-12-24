@@ -169,6 +169,7 @@ def bbhelp(parser, token):
         tags = bbmodule.lib.get_tags()
     if not tags:
         raise template.TemplateSyntaxError, "bbhelp requires tags."
+    tags = sorted(tags, key=lambda x: x.namespaces)
     # Get the Node
     if tplfile:
         return BBHelpTemplateNode(tags, tplfile)
