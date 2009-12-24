@@ -1,7 +1,7 @@
 from pygments.lexer import RegexLexer, bygroups
 from pygments.token import *
 from pygments.lexers._mapping import LEXERS 
-import re               
+import re
 
 __all__ = ['MyBBCodeLexer']
 
@@ -17,8 +17,17 @@ class MyBBCodeLexer(RegexLexer):
             (r'[^[\]]+', Text),
             (r'(\[)(/?[^\]\n\r=]+)(\])',
              bygroups(Keyword, Keyword.Pseudo, Keyword)),
-            (r'(\[)([^\]\n\r=]+)(=)([^\]\n\r]+)(\])',
+            (r'(\[)([^\]\n\r=]+)(=)("[^\]\n\r="]+"|[^\]\n\r= ]+\])',
              bygroups(Keyword, Keyword.Pseudo, Operator, String, Keyword)),
+            (r'(\[)([^\]\n\r= ]+)( )',
+             bygroups(Keyword, Keyword.Pseudo, Text),
+             'multiarg'),
+        ],
+        'multiarg' : [
+            (r'([^\]\n\r= ]+)(=)("[^\]\n\r="]+"|[^\]\n\r= ]+)',
+             bygroups(Keyword.Pseudo, Operator, String)),
+            (' ', Text),
+            (r'\]', Keyword, '#pop'),
         ],
     }
     
