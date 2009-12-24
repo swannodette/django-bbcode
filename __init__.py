@@ -555,7 +555,7 @@ class Library(object):
                 if obj is None:
                     continue
             help_objects.append({'name': obj['name'], 'docstring': obj['docs_rendered'](), 'obj': obj['class']})
-        return help_pbjects
+        return help_objects
     
     def get_tags(self, namespaces=None):
         """
