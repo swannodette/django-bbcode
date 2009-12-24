@@ -430,7 +430,7 @@ class Code(TagNode):
     
     [code][code lang=bbdocs linenos=0]Text[/code]
 [code=language]Text[/code]
-[code lang=language linenos=1 hl_line=5][/code]
+[code lang=language linenos=1 hl_line=5][/code][/code]
     
     Arguments:
     
