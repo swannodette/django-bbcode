@@ -419,7 +419,7 @@ class SelfClosingTagNode(TagNode):
 class AutoDict(dict):
     def __init__(self, default_thing=set, *args, **kwargs):
         self.__default_thing = default_thing() if callable(default_thing) else default_thing
-        self.__init__(self, *args, **kwargs)
+        dict.__init__(self, *args, **kwargs)
 
     def __getitem__(self, item):
         if not dict.__contains__(self, item):
