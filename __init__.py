@@ -449,6 +449,7 @@ class Library(object):
         self.names = AutoDict(None)
         self.raw_names = {}
         self.tags = AutoDict(set)
+        self.klasses = AutoDict(None)
     
     def convert(self, name):
         """
@@ -496,6 +497,7 @@ class Library(object):
                                    'name': verbose_name,
                                    'class': klass,
                                    'docs_rendered': renderer(self.names, tagname, 'docs')}
+            self.klasses[klass] = self.names[tagname]
         self.raw_names[klass.__name__] = klass
         
     def add_namespace(self, klass, *namespaces):

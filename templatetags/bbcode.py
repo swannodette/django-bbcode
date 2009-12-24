@@ -88,7 +88,7 @@ class BBHelpVarnameNode(template.Node):
         self.varname = varname
             
     def render(self, context):
-        context[self.varname] = map(lambda x: bbmodule.lib.names[x], self.tags)
+        context[self.varname] = map(lambda x: bbmodule.lib.klasses[x], self.tags)
         return ''
     
     
