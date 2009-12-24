@@ -448,7 +448,7 @@ class Library(object):
     def __init__(self):
         self.names = AutoDict(None)
         self.raw_names = {}
-        self.tags = AutoDict(set())
+        self.tags = AutoDict(set)
     
     def convert(self, name):
         """
