@@ -70,7 +70,7 @@ class Brainfuck(SelfClosingTagNode):
     
     Usage:
     
-    [code=bbdocs][brainfuck]++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.[/brainfuck][/code]
+    [code lang=bbdocs linenos=0][brainfuck]++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.[/brainfuck][/code]
     
     Note: this brainfuck implementation does not support the , command.
     """

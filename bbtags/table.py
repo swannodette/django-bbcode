@@ -10,7 +10,7 @@ class Table(MultiArgumentTagNode):
     
     Usage:
     
-    [code=bbdocs][table rowsep=\\n colsep=| autohead=1 border=0 cellpadding=0 cellspacing=0 frame=void rules=none colspanchar=@ simple=0 css='']
+    [code lang=bbdocs linenos=0][table rowsep=\\n colsep=| autohead=1 border=0 cellpadding=0 cellspacing=0 frame=void rules=none colspanchar=@ simple=0 css='']
 First column heading | Second column heading
 First row, first column | Second row, second column
 @2 Second row which spans over two columns
@@ -34,7 +34,7 @@ First row, first column | Second row, second column
     
     Usage:
     
-    [code=bbdocs][table border=0 cellpadding=0 cellspacing=0 frame=void rules=none css='']
+    [code lang=bbdocs linenos=0][table border=0 cellpadding=0 cellspacing=0 frame=void rules=none css='']
   [row]
     [head]First column heading[/head]
     [head]Second column heading[/head]
@@ -48,7 +48,7 @@ First row, first column | Second row, second column
   [/row]
     [/table][/code]
     
-    The [code=bbdocs][head][/code] tags are optional.
+    The [code lang=bbdocs linenos=0][head][/code] tags are optional.
     
     Arguments:
     
@@ -240,7 +240,7 @@ class Row(TagNode):
     
     Usage:
         
-    [code=bbdocs][row]
+    [code lang=bbdocs linenos=0][row]
   [col]text[/col]
 [/row][/code]
     """
@@ -262,11 +262,11 @@ class Row(TagNode):
 
 class Col(TagNode):
     """
-    Defines a cell in a basic table. Only allowed inside [code=bbdocs][table]...[row]...[/row]...[/table][/code]. 
+    Defines a cell in a basic table. Only allowed inside [code lang=bbdocs linenos=0][table]...[row]...[/row]...[/table][/code]. 
     
     Usage:
     
-    [code=bbdocs][col]text[/col]
+    [code lang=bbdocs linenos=0][col]text[/col]
 [col=<colspan>]text[/col][/code]
     
     Arguments:
@@ -297,11 +297,11 @@ class Col(TagNode):
 
 class Head(ArgumentTagNode):
     """
-    Defines a table head cell. Only allowed inside [code=bbdocs][table]...[row]...[/row]...[/table][/code].
+    Defines a table head cell. Only allowed inside [code lang=bbdocs linenos=0][table]...[row]...[/row]...[/table][/code].
     
     Usage:
     
-    [code=bbdocs][head]text[/head]
+    [code lang=bbdocs linenos=0][head]text[/head]
 [head=<colspan>]text[/head][/code]
     
     Arguments:

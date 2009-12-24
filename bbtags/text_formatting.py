@@ -17,7 +17,7 @@ class HR(SelfClosingTagNode):
     
     Usage:
     
-    [code=bbdocs][hr /][/code]
+    [code lang=bbdocs linenos=0][hr /][/code]
     
     Note: This tag has no closing tag!
     """
@@ -34,7 +34,7 @@ class P(ReplaceTagNode):
     
     Usage:
     
-    [code=bbdocs][p]Text[/p][/code]
+    [code lang=bbdocs linenos=0][p]Text[/p][/code]
     """
     verbose_name = 'Paragraph'
     open_pattern = re.compile(patterns.no_argument % 'p')
@@ -47,7 +47,7 @@ class Title(ReplaceTagNode):
     
     Usage:
     
-    [code=bbdocs][title]Text[/title][/code]
+    [code lang=bbdocs linenos=0][title]Text[/title][/code]
     """
     tagname = 'h1'
     verbose_name = 'Title'
@@ -60,7 +60,7 @@ class Subtitle(ReplaceTagNode):
     
     Usage:
     
-    [code=bbdocs][subtitle]Text[/subtitle][/code]
+    [code lang=bbdocs linenos=0][subtitle]Text[/subtitle][/code]
     """
     tagname = 'h2'
     verbose_name = 'Subtitle'
@@ -74,7 +74,7 @@ class H(ArgumentTagNode):
     
     Usage:
     
-    [code=bbdocs][hX]Text[/hX][/code]
+    [code lang=bbdocs linenos=0][hX]Text[/hX][/code]
     
     Allowed values for [i]X[/i]: 1,2,3,4,5,6
     """
@@ -92,7 +92,7 @@ class Heading(ArgumentTagNode):
     
     Usage:
     
-    [code=bbdocs][heading=<size>]Text[/heading][/code]
+    [code lang=bbdocs linenos=0][heading=<size>]Text[/heading][/code]
     
     Arguments:
     
@@ -121,7 +121,7 @@ class Em(ReplaceTagNode):
     
     Usage:
     
-    [code=bbdocs][i]Text[/i][/code]
+    [code lang=bbdocs linenos=0][i]Text[/i][/code]
     """
     verbose_name = 'Italic'
     open_pattern = re.compile(patterns.no_argument % 'i')
@@ -134,7 +134,7 @@ class Strong(ReplaceTagNode):
     
     Usage:
     
-    [code=bbdocs][b]Text[/b][/code]
+    [code lang=bbdocs linenos=0][b]Text[/b][/code]
     """
     verbose_name = 'Bold'
     open_pattern = re.compile(patterns.no_argument % 'b')
@@ -147,7 +147,7 @@ class U(ReplaceTagNode):
     
     Usage:
     
-    [code=bbdocs][u]Text[/u][/code]
+    [code lang=bbdocs linenos=0][u]Text[/u][/code]
     """
     verbose_name = 'Underline'
     open_pattern = re.compile(patterns.no_argument % 'u')
@@ -160,7 +160,7 @@ class Size(ArgumentTagNode):
     
     Usage:
     
-    [code=bbdocs][size=<size>]Text[/size][/code]
+    [code lang=bbdocs linenos=0][size=<size>]Text[/size][/code]
     
     Arguments:
     
@@ -186,7 +186,7 @@ class Color(ArgumentTagNode):
     
     Usage:
     
-    [code=bbdocs][color=<color>]Text[/color][/code]
+    [code lang=bbdocs linenos=0][color=<color>]Text[/color][/code]
     
     Allowed values for [i]color[/i]: Any name from http://www.w3schools.com/HTML/html_colornames.asp or any hex color value.
     """
@@ -355,7 +355,7 @@ class Indent(TagNode):
     
     Usage:
     
-    [code=bbdocs][indent]Text[/indent][/code]
+    [code lang=bbdocs linenos=0][indent]Text[/indent][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'indent')
     close_pattern = re.compile(patterns.closing % 'indent')
@@ -370,7 +370,7 @@ class Outdent(TagNode):
     
     Usage:
     
-    [code=bbdocs][outdent]Text[/outdent][/code]
+    [code lang=bbdocs linenos=0][outdent]Text[/outdent][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'outdent')
     close_pattern = re.compile(patterns.closing % 'outdent')
@@ -385,7 +385,7 @@ class Quote(TagNode):
     
     Usage:
     
-    [code=bbdocs][quote]Text[/quote][/code]
+    [code lang=bbdocs linenos=0][quote]Text[/quote][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'quote')
     close_pattern = re.compile(patterns.closing % 'quote')
@@ -400,7 +400,7 @@ class Text(ArgumentTagNode):
     
     Usage:
     
-    [code=bbdocs][text=<align>]Text[/text][/code]
+    [code lang=bbdocs linenos=0][text=<align>]Text[/text][/code]
     
     Arguments:
     
@@ -422,21 +422,43 @@ class Text(ArgumentTagNode):
         return '<p style="text-align:%s;">%s</p>' % (argument, self.parse_inner())
 
 
-class Code(ArgumentTagNode):
+class Code(TagNode):
     """
     Defines text as code (with highlighting).
     
     Usage:
     
-    [code][code=bbdocs]Text[/code]
-[code=<language>]Text[/code][/code]
+    [code][code lang=bbdocs linenos=0]Text[/code]
+[code=language]Text[/code]
+[code lang=language linenos=1 hl_line=5][/code]
     
     Arguments:
     
     Allowed [i]languages[/i]: http://pygments.org/languages/ Default: autodetect
-    """
-    open_pattern = re.compile(patterns.single_argument % 'code')
+    [i]linenos[/i]: switch to display line numbers or not (Allowed values: 1,0. Default: 1)
+    [i]hl_line[/i]: line to highlight, default: 0 (=none)
+    """ 
+    open_pattern = re.compile(r'\[code\]|\[code=(?P<argument>[^\]]+)\]|\[code( (\w+)=("[^\]"]+"|[^\] ]+))?( (\w+)=("[^\]"]+"|[^\] ]+))?( (\w+)=("[^\]"]+"|[^\] ]+))?\]')
     close_pattern = re.compile(patterns.closing % 'code')
+    
+    _arguments = {'lang': '',
+                  'linenos': '1',
+                  'hl_line': '0',}
+    
+    def __init__(self, parent, match, content, context):
+        TagNode.__init__(self, parent, match, content, context)
+        
+        gd = match.groupdict()
+        args = match.groups()[1:]
+        kwargs = dict(self._arguments)
+        for index, value in enumerate(filter(bool, args)):
+            if not index or not index % 3:
+                continue
+            if not (index + 1) % 3:
+                kwargs[args[index - 1]] = self.variables.lazy_resolve(value)
+        if 'argument' in gd and gd['argument']:
+            kwargs['lang'] = gd['argument']
+        self.arguments = kwargs
     
     def parse(self):
         """
@@ -447,9 +469,9 @@ class Code(ArgumentTagNode):
             inner += node.raw_content
         if highlight is None:
             return '<pre>%s</pre>' % inner
-        if self.argument:
+        if self.arguments['lang']:
             try:
-                lexer = get_lexer_by_name(self.argument)
+                lexer = get_lexer_by_name(self.arguments['lang'])
             except ClassNotFound:
                 try:
                     lexer = guess_lexer(inner)
@@ -460,7 +482,15 @@ class Code(ArgumentTagNode):
                 lexer = guess_lexer(inner)
             except ClassNotFound:
                 lexer = TextLexer()
-        formatter = HtmlFormatter(cssclass='code', noclasses=True, linenos='inline')
+        hl_line = self.arguments['hl_line']
+        if not hl_line.isdigit():
+            return self.soft_raise("Code argument hl_line must be digit")
+        hl_line = int(hl_line)
+        hl_lines = [hl_line] if hl_line else []
+        formatter = HtmlFormatter(cssclass='code',
+                                  noclasses=True,
+                                  linenos='inline' if self.arguments['linenos'] == '1' else False,
+                                  hl_lines=hl_lines)
         hilighted = highlight(inner, lexer, formatter)
         return hilighted
     
@@ -471,7 +501,7 @@ class Strike(TagNode):
     
     Usage:
     
-    [code=bbdocs][strike]Text[/strike][/code]
+    [code lang=bbdocs linenos=0][strike]Text[/strike][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'strike')
     close_pattern = re.compile(patterns.closing % 'strike')

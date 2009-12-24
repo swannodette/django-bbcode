@@ -8,7 +8,7 @@ class Url(TagNode):
     
     Usage:
      
-    [code=bbdocs][url=<http://www.domain.com>]Text[/url]
+    [code lang=bbdocs linenos=0][url=<http://www.domain.com>]Text[/url]
 [url]http://www.domain.com[/url][/code]
     """
     verbose_name = 'Link'
@@ -54,7 +54,7 @@ class Email(ArgumentTagNode):
     
     Usage:
     
-    [code=bbdocs][email]name@domain.com[/email]
+    [code lang=bbdocs linenos=0][email]name@domain.com[/email]
 [email=<name@domain.com>]Text[/email][/code]
     """
     verbose_name = 'E-Mail'
@@ -87,7 +87,7 @@ class Img(ArgumentTagNode):
     
     Usage:
     
-    [code=bbdocs][img]http://www.domain.com/image.jpg[/img]
+    [code lang=bbdocs linenos=0][img]http://www.domain.com/image.jpg[/img]
 [img=<align>]http://www.domain.com/image.jpg[/img][/code]
     
     Arguments:
@@ -119,7 +119,7 @@ class Youtube(TagNode):
     
     Usage:
     
-    [code=bbdocs][youtube]http://www.youtube.com/watch?v=FjPf6B8EVJI[/youtube][/code]
+    [code lang=bbdocs linenos=0][youtube]http://www.youtube.com/watch?v=FjPf6B8EVJI[/youtube][/code]
     """
     _video_id_pattern = re.compile('v=(\w+)')
     open_pattern = re.compile(patterns.no_argument % 'youtube')
