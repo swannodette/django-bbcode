@@ -546,7 +546,7 @@ class Library(object):
             tags = self.get_tags()
         help_objects = []
         for tag in tags:
-            if isinstance(tag, Node):
+            if issubclass(tag, Node):
                 obj = self.klasses[tag]
                 if obj is None:
                     continue
