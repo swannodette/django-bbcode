@@ -88,7 +88,7 @@ class BBHelpVarnameNode(template.Node):
         self.varname = varname
             
     def render(self, context):
-        context[self.varname] = map(lambda x: bbmodule.lib.klasses[x], self.tags)
+        context[self.varname] = bbmodule.get_help(self.tags)
         return ''
     
     
@@ -105,7 +105,7 @@ class BBHelpTemplateNode(template.Node):
             realtplfile = self.tplfile.resolve(context)
         except template.VariableDoesNotExist:
             return ''
-        data = {'tags': map(lambda x: bbmodule.lib.names[x], self.tags)}
+        data = {'tags': bbmodule.get_help(self.tags)}
         return render_to_string(self.tplfile, data)
         
 

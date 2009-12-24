@@ -536,22 +536,26 @@ class Library(object):
         else:
             self.add_namespace(klass, '__all__')
             
-    def get_help(self, tagname=None):
+    def get_help(self, *tags):
         """
         Get help for a tag or for all tags.
         
         Returns a dictionary with keys 'name', 'tag', 'docstring'.
         """
-        if not tagname:
-            help_objects = []
-            for name, docsname in self.names.iteritems():
-                    obj = {'name': docsname['name'], 'docstring': docsname['docs'], 'tag': name}
-                    help_objects.append(obj)
-            return help_objects
-        if not tagname in self.names:
-            return "'%s' not found" % tagname
-        docsname = self.names[tagname]
-        return {'name': docsname['name'], 'docstring': docsname['docs'], 'tag': tagname}
+        if not tags:
+            tags = self.get_tags()
+        help_objects = []
+        for tag in tags:
+            if isinstance(tag, Node):
+                obj = self.klasses[tag]
+                if obj is None:
+                    continue
+            else:
+                obj = self.names[tag]
+                if obj is None:
+                    continue
+            help_objects.append({'name': obj['name'], 'docstring': obj['docs_rendered'](), 'obj': obj['class']})
+        return help_pbjects
     
     def get_tags(self, namespaces=None):
         """
