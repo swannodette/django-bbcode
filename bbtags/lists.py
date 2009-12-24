@@ -8,10 +8,10 @@ class OL(MultiArgumentTagNode):
     
     Usage:
     
-        [code][ol]
-            [*] First item
-            [*] Second item
-        [/ol][/code]
+    [code][ol]
+  [*] First item
+  [*] Second item
+[/ol][/code]
     """
     _arguments = {'css': '',
                   'itemcss': ''}

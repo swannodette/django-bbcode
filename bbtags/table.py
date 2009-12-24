@@ -11,10 +11,10 @@ class Table(MultiArgumentTagNode):
     Usage:
     
     [code][table <rowsep>=\\n <colsep>=| <autohead>=1 <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none <colspanchar>=@ <simple>=0 <css>='']
-      First column heading | Second column heading
-      First row, first column | Second row, second column
-      @2 Second row which spans over two columns
-    [/table][code]
+First column heading | Second column heading
+First row, first column | Second row, second column
+@2 Second row which spans over two columns
+[/table][code]
     
     Arguments:
     
@@ -35,17 +35,17 @@ class Table(MultiArgumentTagNode):
     Usage:
     
     [code][table <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none <css>='']
-      [row]
-        [head]First column heading[/head]
-        [head]Second column heading[/head]
-      [/row]
-      [row]
-        [col]First row, first column[/col]
-        [col]First row, second column[/col]
-      [/row]
-      [row]
-        [col=2]Second row, spans over both columns[/col]
-      [/row]
+  [row]
+    [head]First column heading[/head]
+    [head]Second column heading[/head]
+  [/row]
+  [row]
+    [col]First row, first column[/col]
+    [col]First row, second column[/col]
+  [/row]
+  [row]
+    [col=2]Second row, spans over both columns[/col]
+  [/row]
     [/table][/code]
     
     The [code][head][/code] tags are optional.
@@ -240,9 +240,9 @@ class Row(TagNode):
     
     Usage:
         
-    [row]
-        [col]text[/col]
-    [/row]
+    [code][row]
+  [col]text[/col]
+[/row][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'row')
     close_pattern = re.compile(patterns.closing % 'row')
@@ -267,7 +267,7 @@ class Col(TagNode):
     Usage:
     
     [code][col]text[/col]
-    [col=<colspan>]text[/col][/code]
+[col=<colspan>]text[/col][/code]
     
     Arguments:
     
@@ -302,7 +302,7 @@ class Head(ArgumentTagNode):
     Usage:
     
     [code][head]text[/head]
-    [head=<colspan>]text[/head][/code]
+[head=<colspan>]text[/head][/code]
     
     Arguments:
     

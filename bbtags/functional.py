@@ -22,7 +22,7 @@ class BBStyleVariableDefinition(TagNode):
     Example:
     
         [code][def]myvar=http://www.mysite.com[/def]
-        [url=$myvar$/someimg.png]super cool picture[/url][/code]
+[url=$myvar$/someimg.png]super cool picture[/url][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'def')
     close_pattern = re.compile(patterns.closing % 'def')
@@ -53,15 +53,15 @@ class BBStyleArguments(TagNode):
     Usage:
     
         [code][args arg1=val1]
-        ...
-        [/args][/code]
+...
+[/args][/code]
         
     Example:
     
         [code][args align=right]
-        [img]http://www.mysite.com/1.png[/img]
-        [img]http://www.mysite.com/2.png[/img]
-        [/args][/code]
+[img]http://www.mysite.com/1.png[/img]
+[img]http://www.mysite.com/2.png[/img]
+[/args][/code]
         
     This would align both images 'right'.
     """
@@ -117,8 +117,8 @@ class BBStyleRange(MultiArgumentTagNode):
     Usage:
     
         [code][range start=1 end=16 name=index zeropad=3]
-        ...
-        [/range][/code]
+...
+[/range][/code]
         
     Arguments:
     
@@ -130,21 +130,21 @@ class BBStyleRange(MultiArgumentTagNode):
     Example:
     
         [code][range end=10]
-        [img]http://www.mysite.com/img_$index$.png[/img]
-        [/range][/code]
+[img]http://www.mysite.com/img_$index$.png[/img]
+[/range][/code]
         
         is the equivalent to:
     
         [code][img]http://www.mysite.com/img_001.png[/img]
-        [img]http://www.mysite.com/img_002.png[/img]
-        [img]http://www.mysite.com/img_003.png[/img]
-        [img]http://www.mysite.com/img_004.png[/img]
-        [img]http://www.mysite.com/img_005.png[/img]
-        [img]http://www.mysite.com/img_006.png[/img]
-        [img]http://www.mysite.com/img_007.png[/img]
-        [img]http://www.mysite.com/img_008.png[/img]
-        [img]http://www.mysite.com/img_009.png[/img]
-        [img]http://www.mysite.com/img_010.png[/img][/code]
+[img]http://www.mysite.com/img_002.png[/img]
+[img]http://www.mysite.com/img_003.png[/img]
+[img]http://www.mysite.com/img_004.png[/img]
+[img]http://www.mysite.com/img_005.png[/img]
+[img]http://www.mysite.com/img_006.png[/img]
+[img]http://www.mysite.com/img_007.png[/img]
+[img]http://www.mysite.com/img_008.png[/img]
+[img]http://www.mysite.com/img_009.png[/img]
+[img]http://www.mysite.com/img_010.png[/img][/code]
     """
     _arguments = {
         'start': '1',

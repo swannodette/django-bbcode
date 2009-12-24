@@ -420,7 +420,7 @@ class Code(ArgumentTagNode):
     Usage:
     
     [code][code]Text[/code]
-    [code=<language>]Text[/code][/code]
+[code=<language>]Text[/code][/code]
     
     Arguments:
     

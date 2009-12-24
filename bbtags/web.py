@@ -9,7 +9,7 @@ class Url(TagNode):
     Usage:
      
     [code][url=<http://www.domain.com>]Text[/url]
-    [url]http://www.domain.com[/url][/code]
+[url]http://www.domain.com[/url][/code]
     """
     verbose_name = 'Link'
     open_pattern = re.compile(r'(\[url\]|\[url="?(?P<href>[^\]]+)"?\]|\[url (?P<arg1>\w+)="?(?P<val1>[^ ]+)"?( (?P<arg2>\w+)="?(?P<val2>[^ ]+)"?)?\])')
@@ -55,7 +55,7 @@ class Email(ArgumentTagNode):
     Usage:
     
     [code][email]name@domain.com[/email]
-    [email=<name@domain.com>]Text[/email][/code]
+[email=<name@domain.com>]Text[/email][/code]
     """
     verbose_name = 'E-Mail'
     open_pattern = re.compile(patterns.single_argument % 'email')
@@ -88,7 +88,7 @@ class Img(ArgumentTagNode):
     Usage:
     
     [code][img]http://www.domain.com/image.jpg[/img]
-    [img=<align>]http://www.domain.com/image.jpg[/img][/code]
+[img=<align>]http://www.domain.com/image.jpg[/img][/code]
     
     Arguments:
     
