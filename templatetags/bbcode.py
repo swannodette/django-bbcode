@@ -1,6 +1,8 @@
 from django import template
 from django.utils.safestring import mark_safe
-parse = __import__('bbcode',level=0).parse
+from django.template.loader import render_to_string
+
+bbmodule = __import__('bbcode',level=0)
 
 register = template.Library()
 
@@ -36,7 +38,7 @@ class BBCodeNode(template.Node):
                 namespaces = namespaces.union(ns)
             else:
                 namespaces.add(ns)
-        parsed, errors = parse(content, namespaces, False, True, context)
+        parsed, errors = bbmodule.parse(content, namespaces, False, True, context)
         if self.varname:
             context[self.varname] = parsed
             return ''
@@ -77,3 +79,90 @@ def bbcode(parser, token):
             varname = bits[-1]
         bits = bits[:-2]
     return BBCodeNode(content, bits, varname)
+
+
+class BBHelpVarnameNode(template.Node):
+    def __init__(self, tags, varname):
+        self.tags = tags
+        self.varname = varname
+            
+    def render(self, context):
+        context[self.varname] = map(lambda x: bbmodule.lib.names[x], self.tags)
+    
+    
+class BBHelpTemplateNode(template.Node):
+    def __init__(self, tags, tplfile):
+        self.tags = tags
+        if tplfile[0] == tplfile[-1] and tplfile[0] in ('"',"'"):
+            self.tplfile = PseudoVar(tplfile[1:-1])
+        else:
+            self.tplfile = template.Variable(tplfile)
+            
+    def render(self, context):
+        try:
+            realtplfile = self.tplfile.resolve(context)
+        except template.VariableDoesNotExist:
+            return ''
+        data = {'tags': map(lambda x: bbmodule.lib.names[x], self.tags)}
+        return render_to_string(self.tplfile, data)
+        
+
+
+@register.tag
+def bbhelp(parser, token):
+    """
+    Renders help about the bbcode system
+    
+    Usage:
+    
+        {% bbhelp [tag1, tag2 ...] [in namespace1, namespace2] using template.htm|as varname %}
+        
+    Params:
+        
+        <tagX> optional list of tags to return help about
+        <namespaceX> optional list of namespaces to return help about
+        <template.htm> template to render the help with
+        <varname> varname to store the help in
+        
+    Either 'using template' or 'as varname' must be present. 
+    """
+    bits = token.contents.split()
+    tag_name = bits.pop(0)
+    raw_tags = []
+    raw_namespaces = []
+    bit = None
+    tplfile = None
+    varname = None
+    while bits:
+        bit = bits.pop(0)
+        if bit in ('in', 'using', 'as'):
+            break
+        raw_tags.append(bit)
+    # Namespace check
+    if bit == 'in':
+        while bits:
+            bit = bits.pop(0)
+            if bit in ('using', 'as'):
+                break
+            raw_namespaces.append(bit)
+    # template check
+    if bit == 'using':
+        tplfile = bit.pop(0)
+    # varname check 
+    elif bit == 'as':
+        varname = bit.pop(0)
+    else:
+        raise template.TemplateSyntaxError, "bbhelp requires either an 'as varname' or 'using template' argument"
+    # convert raw_tags/raw_namespaces to list of tags
+    tags = set()
+    for ns in raw_namespaces:
+        tags.update(bbmodule.lib.tags[ns])
+    for tg in raw_tags:
+        tginfo = bbmodule.lib.names[tg]
+        if tginfo:
+            tags.add(tginfo['class'])
+    # Get the Node
+    if tplfile:
+        return BBHelpTemplateNode(tags, tplfile)
+    else:
+        return BBHelpVarnameNode(tags, varname)

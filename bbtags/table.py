@@ -6,35 +6,35 @@ class Table(MultiArgumentTagNode):
     """
     There are two ways of defining tables.
     
-    *Simple table*
+    [b]Simple table[b]
     
     Usage:
     
-    [table <rowsep>=\\n <colsep>=| <autohead>=1 <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none <colspanchar>=@ <simple>=0 <css>='']
+    [code][table <rowsep>=\\n <colsep>=| <autohead>=1 <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none <colspanchar>=@ <simple>=0 <css>='']
       First column heading | Second column heading
       First row, first column | Second row, second column
       @2 Second row which spans over two columns
-    [/table]
+    [/table][code]
     
     Arguments:
     
-    <rowsep> defines the separator for rows. Default: \\n (newline)
-    <colsep> defines the separator for columns. Default: |
-    <autohead> turns the first row into the table head if it's set to 1. Default: 1
-    <border>: Defines the width of borders in the table in pixels. Default: 0
-    <cellpadding>: Defines the cellpadding in the table in pixels. Default: 0
-    <cellspacing>: Defines the cellspacing in the table in pixels. Default: 0
-    <frame>: Defines which frame borders are rendered in the table. Default: void
-    <rules>: Defines which in-table borders are rendered. Default: none
-    <colspanchar>: If a cell starts with this character and is followed by a number, this number will be used as the colspan for this cell. Default: @
-    <simple>: Forces a table to be parsed as simple table when all other simple table only arguments are left at default. Default: 0
-    <css>: CSS class to give the table
+    [i]rowsep[/i]: defines the separator for rows. Default: \\n (newline)
+    [i]colsep[/i]: defines the separator for columns. Default: |
+    [i]autohead[/i]: turns the first row into the table head if it's set to 1. Default: 1
+    [i]border[/i]: Defines the width of borders in the table in pixels. Default: 0
+    [i]cellpadding[/i]: Defines the cellpadding in the table in pixels. Default: 0
+    [i]cellspacing[/i]: Defines the cellspacing in the table in pixels. Default: 0
+    [i]frame[/i]: Defines which frame borders are rendered in the table. Default: void
+    [i]rules[/i]: Defines which in-table borders are rendered. Default: none
+    [i]colspanchar[/i]: If a cell starts with this character and is followed by a number, this number will be used as the colspan for this cell. Default: @
+    [i]simple[/i]: Forces a table to be parsed as simple table when all other simple table only arguments are left at default. Default: 0
+    [i]css[/i]: CSS class to give the table
     
-    *Classic table*
+    [b]Classic table[b]
     
     Usage:
     
-    [table <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none <css>='']
+    [code][table <border>=0 <cellpadding>=0 <cellspacing>=0 <frame>=void <rules>=none <css>='']
       [row]
         [head]First column heading[/head]
         [head]Second column heading[/head]
@@ -46,17 +46,17 @@ class Table(MultiArgumentTagNode):
       [row]
         [col=2]Second row, spans over both columns[/col]
       [/row]
-    [/table]
+    [/table][/code]
     
-    The [head] tags are optional.
+    The [code][head][/code] tags are optional.
     
     Arguments:
     
-    <border>: Defines the width of borders in the table in pixels. Default: 0
-    <cellpadding>: Defines the cellpadding in the table in pixels. Default: 0
-    <cellspacing>: Defines the cellspacing in the table in pixels. Default: 0
-    <frame>: Defines which frame borders are rendered in the table. Default: void
-    <rules>: Defines which in-table borders are rendered. Default: none
+    [i]border[/i]: Defines the width of borders in the table in pixels. Default: 0
+    [i]cellpadding[/i]: Defines the cellpadding in the table in pixels. Default: 0
+    [i]cellspacing[/i]: Defines the cellspacing in the table in pixels. Default: 0
+    [i]frame[/i]: Defines which frame borders are rendered in the table. Default: void
+    [i]rules[/i]: Defines which in-table borders are rendered. Default: none
     
     For more information about those arguments visit http://www.w3schools.com/tags/tag_table.asp
     """
@@ -262,16 +262,16 @@ class Row(TagNode):
 
 class Col(TagNode):
     """
-    Defines a cell in a basic table. Only allowed inside [table]...[row]...[/row]...[/table]. 
+    Defines a cell in a basic table. Only allowed inside [code][table]...[row]...[/row]...[/table][/code]. 
     
     Usage:
     
-    [col]text[/col]
-    [col=<colspan>]text[/col]
+    [code][col]text[/col]
+    [col=<colspan>]text[/col][/code]
     
     Arguments:
     
-    <colspan> must be digit. Default: 1 (normal)
+    [i]colspan[/i]: must be digit. Default: 1 (normal)
     """
     open_pattern = re.compile(r'(\[col\]|\[col="?(?P<argument>[^]]+)?"?\])')
     close_pattern = re.compile(patterns.closing % 'col')
@@ -297,16 +297,16 @@ class Col(TagNode):
 
 class Head(ArgumentTagNode):
     """
-    Defines a table head cell. Only allowed inside [table]...[row]...[/row]...[/table].
+    Defines a table head cell. Only allowed inside [code][table]...[row]...[/row]...[/table][/code].
     
     Usage:
     
-    [head]text[/head]
-    [head=<colspan>]text[/head]
+    [code][head]text[/head]
+    [head=<colspan>]text[/head][/code]
     
     Arguments:
     
-    <colspan> must be digit. Default: 1 (normal)
+    [i]colspan[/i]: must be digit. Default: 1 (normal)
     """
     open_pattern = re.compile(patterns.single_argument % 'head')
     close_pattern = re.compile(patterns.closing % 'head')

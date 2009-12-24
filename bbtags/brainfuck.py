@@ -70,7 +70,9 @@ class Brainfuck(SelfClosingTagNode):
     
     Usage:
     
-    [brainfuck]++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.[/brainfuck]
+    [code][brainfuck]++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.[/brainfuck][/code]
+    
+    Note: this brainfuck implementation does not support the , command.
     """
     open_pattern = re.compile(r'\[brainfuck\](?P<bfcode>[+-\[\].><]+)\[/brainfuck\]')
     

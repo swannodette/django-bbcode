@@ -8,8 +8,8 @@ class Url(TagNode):
     
     Usage:
      
-    [url=<http://www.domain.com>]Text[/url]
-    [url]http://www.domain.com[/url]
+    [code][url=<http://www.domain.com>]Text[/url]
+    [url]http://www.domain.com[/url][/code]
     """
     verbose_name = 'Link'
     open_pattern = re.compile(r'(\[url\]|\[url="?(?P<href>[^\]]+)"?\]|\[url (?P<arg1>\w+)="?(?P<val1>[^ ]+)"?( (?P<arg2>\w+)="?(?P<val2>[^ ]+)"?)?\])')
@@ -54,8 +54,8 @@ class Email(ArgumentTagNode):
     
     Usage:
     
-    [email]name@domain.com[/email]
-    [email=<name@domain.com>]Text[/email]
+    [code][email]name@domain.com[/email]
+    [email=<name@domain.com>]Text[/email][/code]
     """
     verbose_name = 'E-Mail'
     open_pattern = re.compile(patterns.single_argument % 'email')
@@ -87,12 +87,12 @@ class Img(ArgumentTagNode):
     
     Usage:
     
-    [img]http://www.domain.com/image.jpg[/img]
-    [img=<align>]http://www.domain.com/image.jpg[/img]
+    [code][img]http://www.domain.com/image.jpg[/img]
+    [img=<align>]http://www.domain.com/image.jpg[/img][/code]
     
     Arguments:
     
-    Allowed values for <align>: left, center, right. Default: None.
+    Allowed values for [i]align[/i]: left, center, right. Default: None.
     """
     verbose_name = 'Image'
     open_pattern = re.compile(patterns.single_argument % 'img')
@@ -119,7 +119,7 @@ class Youtube(TagNode):
     
     Usage:
     
-    [youtube]http://www.youtube.com/watch?v=FjPf6B8EVJI[/youtube]
+    [code][youtube]http://www.youtube.com/watch?v=FjPf6B8EVJI[/youtube][/code]
     """
     _video_id_pattern = re.compile('v=(\w+)')
     open_pattern = re.compile(patterns.no_argument % 'youtube')

@@ -4,11 +4,11 @@ import re
 
 class HR(SelfClosingTagNode):
     """
-    Inserts a horizontal Rule.
+    Inserts a horizontal rule.
     
     Usage:
     
-    [hr /]
+    [code][hr /][/code]
     
     Note: This tag has no closing tag!
     """
@@ -25,7 +25,7 @@ class P(ReplaceTagNode):
     
     Usage:
     
-    [p]Text[/p]
+    [code][p]Text[/p][/code]
     """
     verbose_name = 'Paragraph'
     open_pattern = re.compile(patterns.no_argument % 'p')
@@ -38,7 +38,7 @@ class Title(ReplaceTagNode):
     
     Usage:
     
-    [title]Text[/title]
+    [code][title]Text[/title][/code]
     """
     tagname = 'h1'
     verbose_name = 'Title'
@@ -51,7 +51,7 @@ class Subtitle(ReplaceTagNode):
     
     Usage:
     
-    [subtitle]Text[/subtitle]
+    [code][subtitle]Text[/subtitle][/code]
     """
     tagname = 'h2'
     verbose_name = 'Subtitle'
@@ -59,40 +59,22 @@ class Subtitle(ReplaceTagNode):
     close_pattern = re.compile(patterns.closing % 'subtitle')
     
     
-class H1(ReplaceTagNode):
-    verbose_name = 'Heading 1'
-    open_pattern = re.compile(patterns.no_argument % 'h1')
-    close_pattern = re.compile(patterns.closing % 'h1')
+class H(ArgumentTagNode):
+    """
+    Create a heading.
     
+    Usage:
     
-class H2(ReplaceTagNode):
-    verbose_name = 'Heading 2'
-    open_pattern = re.compile(patterns.no_argument % 'h2')
-    close_pattern = re.compile(patterns.closing % 'h2')
+    [code][hX]Text[/hX][/code]
     
+    Allowed values for [i]X[/i]: 1,2,3,4,5,6
+    """
+    verbose_name = 'Heading'
+    open_pattern = re.compile(r'\[h(?P<argument>[1-6])\]')
+    close_pattern = re.compile(r'\[/h[1-6]\]')
     
-class H3(ReplaceTagNode):
-    verbose_name = 'Heading 3'
-    open_pattern = re.compile(patterns.no_argument % 'h3')
-    close_pattern = re.compile(patterns.closing % 'h3')
-    
-    
-class H4(ReplaceTagNode):
-    verbose_name = 'Heading 4'
-    open_pattern = re.compile(patterns.no_argument % 'h4')
-    close_pattern = re.compile(patterns.closing % 'h4')
-    
-    
-class H5(ReplaceTagNode):
-    verbose_name = 'Heading 5'
-    open_pattern = re.compile(patterns.no_argument % 'h5')
-    close_pattern = re.compile(patterns.closing % 'h5')
-    
-    
-class H6(ReplaceTagNode):
-    verbose_name = 'Heading 6'
-    open_pattern = re.compile(patterns.no_argument % 'h6')
-    close_pattern = re.compile(patterns.closing % 'h6')
+    def parse(self):
+        return '<h%s>%s</h%s>' % (self.argument, self.parse_inner(), self.argument)
     
     
 class Heading(ArgumentTagNode):
@@ -101,12 +83,13 @@ class Heading(ArgumentTagNode):
     
     Usage:
     
-    [heading=<size>]Text[/heading]
+    [code][heading=<size>]Text[/heading][/code]
     
     Arguments:
     
-    Allowed values for <size>: big, medium, small
+    Allowed values for [i]size[/i]: big, medium, small
     """
+    vebose_name = 'Simple Heading'
     open_pattern = re.compile(patterns.single_argument % 'heading')
     close_pattern = re.compile(patterns.closing % 'heading')
     _aliases = {'small':'5', 'medium':'4', 'big':'3'}
@@ -129,7 +112,7 @@ class Em(ReplaceTagNode):
     
     Usage:
     
-    [i]Text[/i]
+    [code][i]Text[/i][/code]
     """
     verbose_name = 'Italic'
     open_pattern = re.compile(patterns.no_argument % 'i')
@@ -142,7 +125,7 @@ class Strong(ReplaceTagNode):
     
     Usage:
     
-    [b]Text[/b]
+    [code][b]Text[/b][/code]
     """
     verbose_name = 'Bold'
     open_pattern = re.compile(patterns.no_argument % 'b')
@@ -155,7 +138,7 @@ class U(ReplaceTagNode):
     
     Usage:
     
-    [u]Text[/u]
+    [code][u]Text[/u][/code]
     """
     verbose_name = 'Underline'
     open_pattern = re.compile(patterns.no_argument % 'u')
@@ -168,11 +151,11 @@ class Size(ArgumentTagNode):
     
     Usage:
     
-    [size=<size>]Text[/size]
+    [code][size=<size>]Text[/size][/code]
     
     Arguments:
     
-    Allowed values for <size>: tiny, small, normal, big, huge
+    Allowed values for [i]size[/i]: tiny, small, normal, big, huge
     """
     _allowed = ('tiny','small','normal','big','huge')
     open_pattern = re.compile(patterns.single_argument % 'size')
@@ -194,9 +177,9 @@ class Color(ArgumentTagNode):
     
     Usage:
     
-    [color=<color>]Text[/color]
+    [code][color=<color>]Text[/color][/code]
     
-    Allowed values for <color>: Any name from http://www.w3schools.com/HTML/html_colornames.asp or any hex color value.
+    Allowed values for [i]color[/i]: Any name from http://www.w3schools.com/HTML/html_colornames.asp or any hex color value.
     """
     _color_names = {'aliceblue': 'f0f8ff',
                     'antiquewhite': 'faebd7',
@@ -363,7 +346,7 @@ class Indent(TagNode):
     
     Usage:
     
-    [indent]Text[/indent]
+    [code][indent]Text[/indent][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'indent')
     close_pattern = re.compile(patterns.closing % 'indent')
@@ -378,7 +361,7 @@ class Outdent(TagNode):
     
     Usage:
     
-    [outdent]Text[/outdent]
+    [code][outdent]Text[/outdent][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'outdent')
     close_pattern = re.compile(patterns.closing % 'outdent')
@@ -393,7 +376,7 @@ class Quote(TagNode):
     
     Usage:
     
-    [quote]Text[/quote]
+    [code][quote]Text[/quote][/code]
     """
     open_pattern = re.compile(patterns.no_argument % 'quote')
     close_pattern = re.compile(patterns.closing % 'quote')
@@ -408,11 +391,11 @@ class Text(ArgumentTagNode):
     
     Usage:
     
-    [text=<align>]Text[/text]
+    [code][text=<align>]Text[/text][/code]
     
     Arguments:
     
-    Allowed values for <align>: left, right, justify. Default: left
+    Allowed values for [i]align[/i]: left, right, justify. Default: left
     """
     open_pattern = re.compile(patterns.single_argument % 'text')
     close_pattern = re.compile(patterns.closing % 'text')
@@ -436,12 +419,12 @@ class Code(ArgumentTagNode):
     
     Usage:
     
-    [code]Text[/code]
-    [code=<language>]Text[/code]
+    [code][code]Text[/code]
+    [code=<language>]Text[/code][/code]
     
     Arguments:
     
-    Allowed <languages>: http://pygments.org/languages/ Default: autodetect
+    Allowed [i]languages[/i]: http://pygments.org/languages/ Default: autodetect
     """
     open_pattern = re.compile(patterns.single_argument % 'code')
     close_pattern = re.compile(patterns.closing % 'code')
@@ -479,6 +462,13 @@ class Code(ArgumentTagNode):
     
     
 class Strike(TagNode):
+    """
+    Strikes text throgh.
+    
+    Usage:
+    
+    [code][strike]Text[/strike][/code]
+    """
     open_pattern = re.compile(patterns.no_argument % 'strike')
     close_pattern = re.compile(patterns.closing % 'strike')
     verbose_name = 'Strike Through'
@@ -500,12 +490,7 @@ register(Code)
 register(Color)
 register(Size)
 register(HR)
-register(H1)
-register(H2)
-register(H3)
-register(H4)
-register(H5)
-register(H6)
+register(H)
 register(Title)
 register(Subtitle)
 register(Heading)

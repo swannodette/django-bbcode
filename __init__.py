@@ -28,8 +28,10 @@ import cgi
 
 try:
     from django.utils.translation import ugettext as _
+    from django.conf import settings
 except ImportError:
     _ = lambda x: x
+    settings = {}
 
 AUTODISCOVERED = False
 
@@ -415,9 +417,13 @@ class SelfClosingTagNode(TagNode):
     
     
 class AutoDict(dict):
+    def __init__(self, default_thing=set, *args, **kwargs):
+        self.__default_thing = default_thing() if callable(default_thing) else default_thing
+        self.__init__(self, *args, **kwargs)
+
     def __getitem__(self, item):
         if not dict.__contains__(self, item):
-            dict.__setitem__(self, item, set())
+            dict.__setitem__(self, item, self.__default_thing)
         return dict.__getitem__(self, item)
     
     
@@ -433,9 +439,9 @@ class Library(object):
     name_pat2 = re.compile('(.)([A-Z][a-z]+)')
     
     def __init__(self):
-        self.names = {}
+        self.names = AutoDict(None)
         self.raw_names = {}
-        self.tags = AutoDict()
+        self.tags = AutoDict(set())
     
     def convert(self, name):
         """
@@ -447,10 +453,8 @@ class Library(object):
         """
         Parse docstrings
         """
-        for match in self.ds_urls.finditer(docs):
-            url = match.group()
-            docs = docs[:match.start()] + '<a href="%s">%s</a>' % (url, url) + docs[match.end():]
-        return self.ds_vars.sub(r'<p class="docstring_arg">\1</p>', docs)
+        content, errors = parse(docs, strict=false, auto_discover=True)
+        return content
     
     def get_default_namespaces(self, klass):
         bits = klass.__module__.split('.')
@@ -481,7 +485,7 @@ class Library(object):
                 verbose_name = klass.verbose_name
             else:
                 verbose_name = self.convert(klass.__name__)
-            self.names[tagname] = {'docs': self.dsparse(docstrings.strip().replace('\n','<br />').replace('\\\\','\\')),
+            self.names[tagname] = {'docs': parse(docstrings.strip(), strict=False, auto_discover=True)[0],
                                    'name': verbose_name,
                                    'class': klass}
         self.raw_names[klass.__name__] = klass
@@ -672,25 +676,20 @@ validate = lib.validate
 get_help = lib.get_help
 get_visual = lib.get_visual_parse_tree
 
-def register_text_parser(parser=None, order=512):
-    """
-    Register a tag parser. This can be used as a decorator.
-    """
-    if parser:
-        lib.register_text_parser(parser)
-        return parser
-    def deco(parser):
-        lib.register_text_parser(parser, order)
-        return parser
-    return deco
+def get_default_namespaces():
+    if hasattr(settings, 'BBCODE_DEFAULT_NAMESPACES'):
+        return settings.BBCODE_DEFAULT_NAMESPACES
+    return ['__all__']
     
-def parse(content, namespaces=['__all__'], strict=True, auto_discover=False,
+def parse(content, namespaces=None, strict=True, auto_discover=False,
           context=None):
     """
     Parse a content with the BBCodes
     """
     if auto_discover:
         autodiscover()
+    if namespaces is None:
+        namespaces = get_default_namespaces()
     # Fix windows linefeeds
     content = content.replace('\r','')
     # Get head node

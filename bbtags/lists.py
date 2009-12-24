@@ -8,10 +8,10 @@ class OL(MultiArgumentTagNode):
     
     Usage:
     
-    [ol]
-    [*] First item
-    [*] Second item
-    [/ol]
+        [code][ol]
+            [*] First item
+            [*] Second item
+        [/ol][/code]
     """
     _arguments = {'css': '',
                   'itemcss': ''}
@@ -53,10 +53,10 @@ class UL(OL):
     
     Usage:
     
-    [ul]
-    [*] First item
-    [*] Second item
-    [/ul]
+        [code][ul]
+            [*] First item
+            [*] Second item
+        [code][/ul]
     """
     @staticmethod
     def open_pattern():
