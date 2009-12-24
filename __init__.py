@@ -75,14 +75,6 @@ def get_tag_name(klass):
     """
     return klass.tagname if hasattr(klass, 'tagname') else klass.__name__.lower()
 
-def renderer(dikt, *keys):
-    def lazy():
-        for key in keys:
-            v = dikt[key]
-        return parse(v, auto_discover=True, strict=False)[0]
-    return lazy
-
-
 class NeedsSubclassingError(Exception): pass
 class ParserError(Exception): pass
 
@@ -495,8 +487,7 @@ class Library(object):
                 verbose_name = self.convert(klass.__name__)
             self.names[tagname] = {'docs': docstrings.strip(),
                                    'name': verbose_name,
-                                   'class': klass,
-                                   'docs_rendered': renderer(self.names, tagname, 'docs')}
+                                   'class': klass}
             self.klasses[klass] = self.names[tagname]
         self.raw_names[klass.__name__] = klass
         
@@ -554,7 +545,9 @@ class Library(object):
                 obj = self.names[tag]
                 if obj is None:
                     continue
-            help_objects.append({'name': obj['name'], 'docstring': obj['docs_rendered'](), 'obj': obj['class']})
+            help_objects.append({'name': obj['name'],
+                                 'docstring': parse(obj['docs'], strict=False, auto_discover=True)[0],
+                                 'obj': obj['class']})
         return help_objects
     
     def get_tags(self, namespaces=None):
