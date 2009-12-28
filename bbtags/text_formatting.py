@@ -329,7 +329,7 @@ class Color(ArgumentTagNode):
                     'whitesmoke': 'f5f5f5',
                     'yellow': 'ffff00',
                     'yellowgreen': '9acd32'}
-    _hex = re.compile('#?([0-9a-f]{3,3}|[0-9a-f]{6,6})')
+    _hex = re.compile('#?(?P<hexcode>[0-9a-f]{6}|[0-9a-f]{3})')
     open_pattern = re.compile(patterns.single_argument % 'color')
     close_pattern = re.compile(patterns.closing % 'color')
     
@@ -345,7 +345,7 @@ class Color(ArgumentTagNode):
                 soft_raise("Color '%s' not allowed." % argument)
                 return self.parse_inner()
             else:
-                hex = '#' + match.group()
+                hex = '#' + match.groupdict()['hexcode']
         return '<span style="color: %s;">%s</span>' % (hex, self.parse_inner())
         
     
