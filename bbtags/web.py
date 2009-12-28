@@ -65,7 +65,10 @@ class Email(ArgumentTagNode):
         if self.argument:
             inner = ''
             for node in self.nodes:
-                inner += self.raw_content # need raw content because of text parsers
+                if isinstance(node, AutoDetectURL):
+                    inner += node.raw_content
+                else:
+                    inner += node.parse()
             return '<a href="mailto:%s">%s</a>' % (self.argument, inner)
         else:
             inner = ''
