@@ -1,6 +1,5 @@
 from django import template
 from django.utils.safestring import mark_safe
-from django.template.loader import render_to_string
 
 bbmodule = __import__('bbcode',level=0)
 
@@ -106,8 +105,9 @@ class BBHelpTemplateNode(template.Node):
         except template.VariableDoesNotExist:
             return ''
         rendered_tags = []
-        for tag in self.tags:
-            rendered_tags.append(render_to_string(realtplfile, {'tag': tag}))
+        tpl = template.loader.get_template(realtplfile)
+        for tag in bbmodule.get_help(*self.tags):
+            rendered_tags.append(tpl.render(template.Context({'tag': tag})))
         return '\n'.join(rendered_tags)
         
 
