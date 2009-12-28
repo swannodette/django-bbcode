@@ -105,8 +105,10 @@ class BBHelpTemplateNode(template.Node):
             realtplfile = self.tplfile.resolve(context)
         except template.VariableDoesNotExist:
             return ''
-        data = {'tags': bbmodule.get_help(*self.tags)}
-        return render_to_string(self.tplfile, data)
+        rendered_tags = []
+        for tag in self.tags:
+            rendered_tags.append(render_to_string(self.tplfile, {'tag': tag}))
+        return '\n'.join(rendered_tags)
         
 
 
