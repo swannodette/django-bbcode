@@ -107,7 +107,7 @@ class BBHelpTemplateNode(template.Node):
             return ''
         rendered_tags = []
         for tag in self.tags:
-            rendered_tags.append(render_to_string(self.tplfile, {'tag': tag}))
+            rendered_tags.append(render_to_string(realtplfile, {'tag': tag}))
         return '\n'.join(rendered_tags)
         
 
