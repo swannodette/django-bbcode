@@ -48,7 +48,7 @@ First row, first column | Second row, second column
   [/row]
 [/table][/code]
     
-    The [code lang=bbdocs linenos=0][head][/code] tags are optional.
+    The [code lang=bbdocs linenos=0][head]...[/head][/code] tags are optional.
     
     Arguments:
     
