@@ -56,7 +56,7 @@ class UL(OL):
         [code lang=bbdocs linenos=0][ul]
   [*] First item
   [*] Second item
-[code lang=bbdocs linenos=0][/ul]
+[/ul][/code]
     """
     @staticmethod
     def open_pattern():

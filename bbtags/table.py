@@ -46,7 +46,7 @@ First row, first column | Second row, second column
   [row]
     [col=2]Second row, spans over both columns[/col]
   [/row]
-    [/table][/code]
+[/table][/code]
     
     The [code lang=bbdocs linenos=0][head][/code] tags are optional.
     
