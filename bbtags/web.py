@@ -28,11 +28,11 @@ class Url(TagNode):
         else:
             inner = ''
             for node in self.nodes:
-                if not node.is_text_node:
+                if node.is_text_node or isinstance(AutoDetectURL):
+                    inner += node.raw_content
+                else:
                     soft_raise("Url tag cannot have nested tags without an argument.")
                     return self.raw_content
-                else:
-                    inner += node.raw_content
             href = self.variables.resolve(inner)
             inner = href
         if gd['css']:
