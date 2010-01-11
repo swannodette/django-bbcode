@@ -99,12 +99,12 @@ class Img(ArgumentTagNode):
     
     def parse(self):
         inner = ''
-        for node in self.nodes:
-            if not node.is_text_node:
+        for node in self.nodes:    
+            if node.is_text_node or isinstance(node, AutoDetectURL):
+                inner += node.raw_content
+            else:
                 soft_raise("Img tag cannot have nested tags without an argument.")
                 return self.raw_content
-            else:
-                inner += node.raw_content
         inner = self.variables.resolve(inner)
         if self.argument:
             return '<img src="%s" alt="image" class="img-%s" />' % (inner, self.argument)
@@ -127,11 +127,11 @@ class Youtube(TagNode):
     def parse(self):
         url = ''
         for node in self.nodes:
-            if not node.is_text_node:
+            if node.is_text_node or isinstance(node, AutoDetectURL):
+                inner += node.raw_content
+            else:
                 soft_raise("Youtube tag cannot have nested tags")
                 return self.raw_content
-            else:
-                url += node.raw_content
         match = self._video_id_pattern.search(url)
         if not match:
             soft_raise("'%s' does not seem like a youtube link" % url)
