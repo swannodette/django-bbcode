@@ -28,7 +28,7 @@ class Url(TagNode):
         else:
             inner = ''
             for node in self.nodes:
-                if node.is_text_node or isinstance(AutoDetectURL):
+                if node.is_text_node or isinstance(node, AutoDetectURL):
                     inner += node.raw_content
                 else:
                     soft_raise("Url tag cannot have nested tags without an argument.")
