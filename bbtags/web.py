@@ -73,11 +73,7 @@ class Email(ArgumentTagNode):
         else:
             inner = ''
             for node in self.nodes:
-                if not node.is_text_node:
-                    soft_raise("Email tag cannot have nested tags without an argument.")
-                    return self.raw_content
-                else:
-                    inner += node.raw_content
+                inner += self.raw_content
             return '<a href="mailto:%s">%s</a>' % (inner, inner)
     
     
