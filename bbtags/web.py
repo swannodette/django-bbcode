@@ -12,7 +12,9 @@ class Url(TagNode):
 [url]http://www.domain.com[/url][/code]
     """
     verbose_name = 'Link'
-    open_pattern = re.compile(r'(\[url\]|\[url="?(?P<href>[^\]]+)"?\]|\[url (?P<arg1>\w+)="?(?P<val1>[^ ]+)"?( (?P<arg2>\w+)="?(?P<val2>[^ ]+)"?)?\])')
+    open_pattern = re.compile(r'(\[url\]|\[url="?(?P<href>[^\]]+)"?\]|\[url (?P'
+                               '<arg1>\w+)="?(?P<val1>[^ ]+)"?( (?P<arg2>\w+)="'
+                               '?(?P<val2>[^ ]+)"?)?\])')
     close_pattern = re.compile(patterns.closing % 'url')
     
     def parse(self):
@@ -31,8 +33,8 @@ class Url(TagNode):
                 if node.is_text_node or isinstance(node, AutoDetectURL):
                     inner += node.raw_content
                 else:
-                    soft_raise("Url tag cannot have nested tags without an argument.")
-                    return self.raw_content
+                    self.soft_raise("Url tag cannot have nested tags without "
+                                    "an argument.")
             href = self.variables.resolve(inner)
             inner = href
         if gd['css']:
@@ -65,7 +67,7 @@ class Email(ArgumentTagNode):
         if self.argument:
             inner = ''
             for node in self.nodes:
-                if isinstance(node, AutoDetectURL):
+                if node.is_text_node or isinstance(node, AutoDetectURL):
                     inner += node.raw_content
                 else:
                     inner += node.parse()
@@ -141,11 +143,28 @@ class Youtube(TagNode):
             soft_raise("'%s' does not seem like a youtube link" % url)
             return self.raw_content
         videoid = videoid[0]
-        return """<object width="560" height="340"><param name="movie" value="http://www.youtube.com/v/%s&hl=en&fs=1&"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/%s&hl=en&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="560" height="340"></embed></object>""" % (videoid, videoid)
+        return (
+            '<object width="560" height="340"><param name="movie" value="http:/'
+            '/www.youtube.com/v/%s&hl=en&fs=1&"></param><param name="allowFullS'
+            'creen" value="true"></param><param name="allowscriptaccess" value='
+            '"always"></param><embed src="http://www.youtube.com/v/%s&hl=en&fs='
+            '1&" type="application/x-shockwave-flash" allowscriptaccess="always'
+            '" allowfullscreen="true" width="560" heigh'
+        )
     
     
 class AutoDetectURL(SelfClosingTagNode):
-    open_pattern = re.compile('[^[\]](?#Protocol)(?:(?:ht|f)tp(?:s?)\:\/\/|~/|/)?(?#Username:Password)(?:\w+:\w+@)?(?#Subdomains)(?:(?:[-\w]+\.)+(?#TopLevel Domains)(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|travel|[a-z]{2}))(?#Port)(?::[\d]{1,5})?(?#Directories)(?:(?:(?:/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|/)+|\?|#)?(?#Query)(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?#Anchor)(?:#(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)?[^[\]]')
+    open_pattern = re.compile('[^[\]](?#Protocol)(?:(?:ht|f)tp(?:s?)\:\/\/|~/|/'
+                              ')?(?#Username:Password)(?:\w+:\w+@)?(?#Subdomain'
+                              's)(?:(?:[-\w]+\.)+(?#TopLevel Domains)(?:com|org'
+                              '|net|gov|mil|biz|info|mobi|name|aero|jobs|museum'
+                              '|travel|[a-z]{2}))(?#Port)(?::[\d]{1,5})?(?#Dire'
+                              'ctories)(?:(?:(?:/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+'
+                              ')+|/)+|\?|#)?(?#Query)(?:(?:\?(?:[-\w~!$+|.,*:]|'
+                              '%[a-f\d{2}])+=(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)('
+                              '?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=(?:[-\w~!$+|.'
+                              ',*:=]|%[a-f\d]{2})*)*)*(?#Anchor)(?:#(?:[-\w~!$+'
+                              '|.,*:=]|%[a-f\d]{2})*)?[^[\]]')
     
     def parse(self):
         url = self.match.group()
