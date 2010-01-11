@@ -73,7 +73,7 @@ class Email(ArgumentTagNode):
         else:
             inner = ''
             for node in self.nodes:
-                inner += self.raw_content
+                inner += node.raw_content
             return '<a href="mailto:%s">%s</a>' % (inner, inner)
     
     
