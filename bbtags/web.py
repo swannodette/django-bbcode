@@ -50,7 +50,7 @@ class Url(TagNode):
         return '<a href="%s"%s>%s</a>' % (href, css, inner)
     
 
-class Email(ArgumentTagNode):
+class Email(TagNode):
     """
     Creates an email link.
     
@@ -60,18 +60,20 @@ class Email(ArgumentTagNode):
 [email=<name@domain.com>]Text[/email][/code]
     """
     verbose_name = 'E-Mail'
-    open_pattern = re.compile(patterns.single_argument % 'email')
+    open_pattern = re.compile(r'(\[email\]|\[email=(?P<mail>[^\]]+\]))')
     close_pattern = re.compile(patterns.closing % 'email')
-    
+
     def parse(self):
-        if self.argument:
+        gd = self.match.groupdict()
+        email = gd.get('email', None)
+        if email:
             inner = ''
             for node in self.nodes:
                 if node.is_text_node or isinstance(node, AutoDetectURL):
                     inner += node.raw_content
                 else:
                     inner += node.parse()
-            return '<a href="mailto:%s">%s</a>' % (self.argument, inner)
+            return '<a href="mailto:%s">%s</a>' % (email, inner)
         else:
             inner = ''
             for node in self.nodes:

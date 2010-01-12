@@ -453,7 +453,7 @@ class Library(object):
         """
         Parse docstrings
         """
-        content, errors = parse(docs, strict=false, auto_discover=True)
+        content, errors = parse(docs, strict=False, auto_discover=True)
         return content
     
     def get_default_namespaces(self, klass):
@@ -627,6 +627,9 @@ class Library(object):
         # Loop over tag matches
         for pos, match, tagklass, opener in taglist:
             start, end = match.span()
+            # Prevent tags matching within other tags (eg AutoDetectURL)
+            if start < lastpos:
+                continue
             # Append text between last tag and this one
             text = content[lastpos:start]
             if text:
