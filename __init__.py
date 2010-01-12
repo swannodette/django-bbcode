@@ -64,7 +64,7 @@ class patterns:
     """
     no_argument = r'\[%s\]'
     self_closing_tag = r'\[%s\s*/\]'
-    single_argument = r'\[%s(\]|="?(?P<argument>[^]]+)"?\])'
+    single_argument = r'\[%s(\]|="?(?P<argument>[^\]]+)"?\])'
     argument = r'( (\w+)=([^\] ]+))?'
     closing = r'\[/%s\]'
     unmatchable = UnmatchablePseudoPattern()
