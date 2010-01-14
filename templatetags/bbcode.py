@@ -39,7 +39,7 @@ class BBCodeNode(template.Node):
                 namespaces.add(ns)
         parsed, errors = bbmodule.parse(content, namespaces, False, True, context)
         if self.varname:
-            context[self.varname] = parsed
+            context[self.varname] = mark_safe(parsed)
             return ''
         else:
             return mark_safe(parsed)
