@@ -28,10 +28,8 @@ import cgi
 
 try:
     from django.utils.translation import ugettext as _
-    from django.conf import settings
 except ImportError:
     _ = lambda x: x
-    settings = {}
 
 AUTODISCOVERED = False
 
@@ -197,7 +195,7 @@ class Node(object):
         """
         Adds a text node to the node
         """
-        self.nodes.append(TextNode(text))
+        self.nodes.append(TextNode(self, text))
     
     def push(self, nodeklass, match, fullcontent):
         """
@@ -265,8 +263,10 @@ class HeadNode(Node):
 class TextNode(Node):
     smilie_pattern = re.compile(':(?P<name>\w+):')
     is_text_node = True
-    def __init__(self, text):
+    def __init__(self, parent, text):
         self.text = text
+        self.variables = parent.variables
+        self.parent = parent
         self.raw_content = text
         self.nodes = []
         
@@ -289,7 +289,7 @@ class TextNode(Node):
         """
         Return cgi-escaped content
         """
-        return cgi.escape(self.text)
+        return cgi.escape(self.variables.resolve(self.text))
     
     def __str__(self):
         return 'TextNode: %r' % self.text
@@ -700,6 +700,7 @@ get_help = lib.get_help
 get_visual = lib.get_visual_parse_tree
 
 def get_default_namespaces():
+    from django.conf import settings
     if hasattr(settings, 'BBCODE_DEFAULT_NAMESPACES'):
         return settings.BBCODE_DEFAULT_NAMESPACES
     return ['__all__']
