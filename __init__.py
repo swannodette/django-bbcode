@@ -71,7 +71,10 @@ def get_tag_name(klass):
     """
     Convert a class to tagname
     """
-    return klass.tagname if hasattr(klass, 'tagname') else klass.__name__.lower()
+    if hasattr(klass, 'tagname'):
+        return klass.tagname
+    else:
+        return klass.__name__.lower()
 
 class NeedsSubclassingError(Exception): pass
 class ParserError(Exception): pass
@@ -348,8 +351,8 @@ class ArgumentTagNode(TagNode):
     def __init__(self, parent, match, content, context):
         TagNode.__init__(self, parent, match, content, context)
         arg = match.group('argument')
-        self.argument = self.variables.lazy_resolve(arg.strip('"') if arg else '')
-        
+        self.argument = (arg and self.variables.lazy_resolve(arg.strip('"'))) or ''
+
     def __str__(self):
         return '%s (%s)' % (self.__class__.__name__, self.argument)
 
@@ -422,7 +425,7 @@ class AutoDict(dict):
 
     def __getitem__(self, item):
         if not dict.__contains__(self, item):
-            dict.__setitem__(self, item, self.__default_thing() if callable(self.__default_thing) else self.__default_thing)
+            dict.__setitem__(self, item, ((callable(self.__default_thing) and self.__default_thing()) or self.__default_thing))
         return dict.__getitem__(self, item)
     
     

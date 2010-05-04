@@ -1,6 +1,6 @@
 from django.db import models
 from django import forms
-validate = __import__('bbcode',level=0).validate
+validate = __import__('bbcode').validate
 
 class BBCodeTextField(models.TextField):
     """
